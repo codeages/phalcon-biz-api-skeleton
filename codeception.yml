@@ -1,0 +1,41 @@
+namespace: Test
+suites:
+    unit:
+        path: UnitTest
+        actor: UnitTester
+        modules:
+            enabled:
+                # add more modules here
+                - Asserts
+                - Db:
+                    dsn: 'mysql:host=localhost;dbname=app-store-testing'
+                    user: 'root'
+                    password: ''
+                    reconnect: true
+    api:
+        path: ApiTest
+        actor: ApiTester
+        modules:
+            enabled:
+                - \Test\Helper\Api
+                - Db:
+                    dsn: 'mysql:host=localhost;dbname=app-store-testing'
+                    user: 'root'
+                    password: ''
+                    dump: 'tests/_data/dump.sql'
+                    populate: false
+                    cleanup: false
+                    reconnect: true
+                - REST:
+                    url: http://localhost:8000
+                    depends: PhpBrowser
+                    part: Json
+settings:
+    bootstrap: _bootstrap.php
+    shuffle: true
+    lint: true
+paths:
+    tests: tests
+    output: tests/_output
+    support: tests/_support
+    data: tests
