@@ -9,6 +9,16 @@ class UserDaoImpl extends GeneralDaoImpl implements UserDao
 {
     protected $table = 'user';
 
+    public function getByUsername($username)
+    {
+        return $this->getByFields(['username' => $username]);
+    }
+    
+    public function getByEmail($email)
+    {
+        return $this->getByFields(['email' => $email]);
+    }
+
     public function declares()
     {
         return [
@@ -19,15 +29,5 @@ class UserDaoImpl extends GeneralDaoImpl implements UserDao
                 'nickname' => 'utf8',
             ],
         ];
-    }
-
-    public function getByWechatId($wechatId)
-    {
-        return $this->getByFields(['wechat_id' => $wechatId]);
-    }
-
-    public function findByIds(array $ids)
-    {
-        return $this->findInField('id', $ids);
     }
 }

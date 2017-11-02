@@ -17,7 +17,7 @@
 ## 安装
 
 ```
-composer create-project odeages/phalcon-biz-api-skeleton my_api_project
+composer create-project codeages/phalcon-biz-api-skeleton my_api_project
 ```
 
 ## 开发

@@ -12,7 +12,5 @@ interface UserService
 
     public function createUser($user);
     
-    public function updateUser($id, array $fields);
-
     public function banUser($id);
 }

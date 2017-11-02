@@ -12,12 +12,22 @@ class UserServiceTest extends BaseTest
         $this->tester->assertEquals($fakeUser['id'], $user['id']);
     }
 
+    public function testCreateUser()
+    {
+        $user = [
+            'username' => 'test',
+            'password' => 'test',
+        ];
+        $createdUser = $this->getUserService()->createUser($user);
+
+        $this->tester->assertEquals($user['username'], $createdUser['username']);
+    }
+
     protected function fakeUser($user = [])
     {
         $user = array_merge([
             'id' => 1,
             'username' => 'test',
-            'email' => 'test@example.com',
             'password' => 'test_password',
             'salt' => 'test_salt',
             'updated_at' => time(),

@@ -13,14 +13,12 @@ class Init extends Migration
             CREATE TABLE `user`(
                 `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `username` VARCHAR(32) NOT NULL,
-                `email` VARCHAR(128) NOT NULL,
                 `password` VARCHAR(128) NOT NULL,
                 `salt` VARCHAR(64) NOT NULL,
                 `created_at` INT(10) UNSIGNED NOT NULL,
                 `updated_at` INT(10) UNSIGNED NOT NULL,
                 PRIMARY KEY(`id`),
-                UNIQUE KEY `username`(`username`),
-                UNIQUE KEY `email`(`email`)
+                UNIQUE KEY `username`(`username`)
             ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
         ");
     }

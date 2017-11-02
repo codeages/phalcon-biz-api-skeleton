@@ -1,14 +1,14 @@
 <?php
-
 namespace Biz\User\Service\Impl;
 
 use Biz\User\Dao\UserDao;
 use Biz\User\Service\UserService;
 use Codeages\Biz\Framework\Service\BaseService;
+use Codeages\Biz\Framework\Service\Exception\InvalidArgumentException;
+use Webpatser\Uuid\Uuid;
 
 class UserServiceImpl extends BaseService implements UserService
 {
-
     public function getUser($id)
     {
         return $this->getUserDao()->get($id);
@@ -26,14 +26,20 @@ class UserServiceImpl extends BaseService implements UserService
 
     public function createUser($user)
     {
-        $user['password'] = md5('password');
-        $user['salt'] = md5(time());
-        return $this->getUserDao()->create($user);
-    }
+        $user = $this->biz['validator']->validate($user, [
+            'username' => 'required|string|length_between:3,18',
+            'password' => 'required|string|length_between:3,32'
+        ]);
 
-    public function updateUser($id, array $fields)
-    {
-        return $this->getUserDao()->update($id, $fields);
+        $existUser = $this->getUserDao()->getByUsername($user['username']);
+        if ($existUser) {
+            throw new InvalidArgumentException("用户名已存在，注册失败！");
+        }
+
+        $user['salt'] = Uuid::generate(4);
+        $user['password'] = $this->encodePassword($user['password'], $user['salt']);
+        
+        return $this->getUserDao()->create($user);
     }
 
     public function banUser($id)
@@ -41,6 +47,17 @@ class UserServiceImpl extends BaseService implements UserService
 
     }
 
+    protected function encodePassword($password, $salt)
+    {
+        $options = [
+            'salt' => $salt,
+        ];
+        return password_hash($password, PASSWORD_BCRYPT, $options);
+    }
+
+    /**
+     * @return \Biz\User\Dao\UserDao
+     */
     protected function getUserDao()
     {
         return $this->biz->dao('User:UserDao');

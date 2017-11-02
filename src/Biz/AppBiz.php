@@ -6,6 +6,7 @@ use Codeages\Biz\Framework\Context\Biz;
 use Codeages\Biz\Framework\Provider\MonologServiceProvider;
 use Codeages\Biz\Framework\Provider\DoctrineServiceProvider;
 use Codeages\Biz\Framework\Provider\TargetlogServiceProvider;
+use Codeages\Biz\Framework\Validation\SimpleValidator;
 
 class AppBiz extends Biz
 {
@@ -18,5 +19,9 @@ class AppBiz extends Biz
         $this->register(new MonologServiceProvider(), [
             'monolog.logfile' => $this['log_dir'].'/app.log',
         ]);
+
+        $this['validator'] = $this->factory(function(){
+            return new SimpleValidator();
+        }); 
     }
 }
