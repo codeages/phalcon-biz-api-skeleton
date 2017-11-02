@@ -23,6 +23,17 @@ class UserServiceTest extends BaseTest
         $this->tester->assertEquals($user['username'], $createdUser['username']);
     }
 
+    public function testCreateUserWithExistUsernameThanFailed()
+    {
+        $user = [
+            'username' => 'test',
+            'password' => 'test',
+        ];
+        $createdUser = $this->getUserService()->createUser($user);
+
+        $this->tester->assertEquals($user['username'], $createdUser['username']);
+    }
+
     protected function fakeUser($user = [])
     {
         $user = array_merge([
