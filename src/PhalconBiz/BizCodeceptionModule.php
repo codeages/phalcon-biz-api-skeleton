@@ -68,6 +68,46 @@ class BizCodeceptionModule extends CodeceptionModule
         return $this->biz->dao($dao);
     }
 
+    /**
+     * Inserts an SQL record into a database. This record will be erased after the test.
+     *
+     * ```php
+     * <?php
+     * $I->haveInDatabase('users', array('name' => 'hello', 'email' => 'hello@example.com'));
+     * ?>
+     * ```
+     *
+     * @param string $table
+     * @param array $data
+     *
+     * @return integer $id
+     */
+    public function haveInDatabase($table, array $data)
+    {
+        return $this->biz['db']->insert($table, $data);
+    }
+
+    public function seeInDatabase($table, $criteria = [])
+    {
+        $builder = $this->biz['db']->createQueryBuilder()
+            ->select("COUNT(*)")
+            ->from($table);
+        
+        $index = 0; 
+        foreach($criteria as $field => $value) {
+            $builder->where("{$field} = ?");
+            $builder->setParameter($index, $value);
+        }
+
+        $res = (int) $builder->execute()->fetchColumn(0);
+
+        $this->assertGreaterThan(
+            0,
+            $res,
+            'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table
+        );
+    }
+
     public function _before(\Codeception\TestInterface $test)
     {
         $this->biz = new $this->config['class']($this->bizConfig);

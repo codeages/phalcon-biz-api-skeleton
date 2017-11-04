@@ -17,63 +17,58 @@ class UserServiceTest extends \Codeception\Test\Unit
         $this->tester->assertEquals($fakeUser['id'], $user['id']);
     }
 
-    // public function testCreateUserWithValidParams()
-    // {
-    //     $user = [
-    //         'username' => 'test',
-    //         'password' => 'test',
-    //     ];
-    //     $createdUser = $this->getUserService()->createUser($user);
+    public function testCreateUserWithValidParams()
+    {
+        $user = [
+            'username' => 'test',
+            'password' => 'test',
+        ];
+        $createdUser = $this->getUserService()->createUser($user);
 
-    //     $this->tester->assertEquals($user['username'], $createdUser['username']);
-    // }
+        $this->tester->assertEquals($user['username'], $createdUser['username']);
+    }
 
-    // /**
-    //  * @expectedException Codeages\Biz\Framework\Service\Exception\InvalidArgumentException
-    //  * @expectedExceptionMessageRegExp /用户名已存在/
-    //  */
-    // public function testCreateUserWithExistUsernameThanThrowException()
-    // {
-    //     $user = [
-    //         'username' => 'test',
-    //         'password' => 'test',
-    //     ];
-    //     $this->getUserService()->createUser($user);
-    //     $this->getUserService()->createUser($user);
-    // }
+    /**
+     * @expectedException Codeages\Biz\Framework\Service\Exception\InvalidArgumentException
+     * @expectedExceptionMessageRegExp /用户名已存在/
+     */
+    public function testCreateUserWithExistUsernameThanThrowException()
+    {
+        $user = [
+            'username' => 'test',
+            'password' => 'test',
+        ];
+        $this->getUserService()->createUser($user);
+        $this->getUserService()->createUser($user);
+    }
 
-    // /**
-    //  * @expectedException Codeages\Biz\Framework\Validation\ValidationException
-    //  */
-    // public function testCreateUserWithUsernameHasInvalidLengthThanThrowException()
-    // {
-    //     $user = [
-    //         'id' => 1,
-    //         'username' => 'testtest1234567890123456789',
-    //         'password' => 'test_password',
-    //         'salt' => 'test_salt',
-    //         'is_banned' => 0,
-    //         'created_at' => time(),
-    //         'updated_at' => time(),
-    //     ];
-    //     $this->tester->haveInDatabase($this->getUserTable(), $user);
-    // }
+    /**
+     * @expectedException Codeages\Biz\Framework\Validation\ValidationException
+     */
+    public function testCreateUserWithUsernameHasInvalidLengthThanThrowException()
+    {
+        $user = [
+            'id' => 1,
+            'username' => 'testtest1234567890123456789',
+            'password' => 'test_password',
+            'salt' => 'test_salt',
+            'is_banned' => 0
+        ];
+        $this->getUserService()->createUser($user);
+    }
 
-    // /**
-    //  * @group current
-    //  *
-    //  * @return void
-    //  */
-    // public function testBanUser()
-    // {
-    //     $user = $this->fakeUser();
+    /**
+     * @group current
+     *
+     * @return void
+     */
+    public function testBanUser()
+    {
+        $user = $this->fakeUser();
+        $this->getUserService()->banUser($user['id']);
 
-    //     $this->getUserService()->banUser($user['id']);
-
-    //     $user = $this->getUserService()->getUser($user['id']);
-
-    //     $this->tester->seeInDatabase($this->getUserTable(), ['id' => $user['id'], 'is_banned' => 1]);
-    // }
+        $this->tester->seeInDatabase($this->getUserTable(), ['id' => $user['id'], 'is_banned' => 1]);
+    }
 
     protected function fakeUser($user = [])
     {
@@ -82,9 +77,13 @@ class UserServiceTest extends \Codeception\Test\Unit
             'username' => 'test',
             'password' => 'test_password',
             'salt' => 'test_salt',
+            'created_at' => time(),
+            'updated_at' => time(),
         ], $user);
 
-        return $this->getUserDao()->create($user);
+        $this->tester->haveInDatabase($this->getUserTable(), $user);
+
+        return $user;
     }
 
     protected function getUserTable()
