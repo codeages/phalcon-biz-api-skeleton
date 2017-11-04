@@ -129,4 +129,14 @@ trait ControllerTrait
 
         return $type;
     }
+
+    protected function success()
+    {
+        return ['success' => true];
+    }
+
+    protected function throwNotFoundException($message)
+    {
+        throw new NotFoundException($message);
+    }
 }

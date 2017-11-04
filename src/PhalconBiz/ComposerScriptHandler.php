@@ -25,9 +25,9 @@ class ComposerScriptHandler
         \file_put_contents('env.php', $content);
 
         $io->write("\n");
-        $io->write('<bg=green>                             </>');
-        $io->write('<bg=green> [OK] "env.php" file created.</>');
-        $io->write('<bg=green>                             </>');
+        $io->write('<bg=green>                              </>');
+        $io->write('<bg=green> [OK] "env.php" file created. </>');
+        $io->write('<bg=green>                              </>');
         $io->write("\n");
     }
 

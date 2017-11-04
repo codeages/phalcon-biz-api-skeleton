@@ -107,10 +107,7 @@ class Application
             if ($e instanceof ServiceException) {
                 $error = ['code' => $e->getCode(), 'message' => $e->getMessage()];
                 $statusCode = 400;
-            } elseif ($e instanceof NotFoundHttpException) {
-                $error = ['code' => ErrorCode::NOT_FOUND, 'message' => $e->getMessage() ?: 'Route Not Found.'];
-                $statusCode = 404;
-            } elseif ($e instanceof ServiceNotFoundException) {
+            } elseif ($e instanceof NotFoundException || $e instanceof ServiceNotFoundException) {
                 $error = ['code' => ErrorCode::RESOURCE_NOT_FOUND, 'message' => $e->getMessage() ? : 'Resource Not Found.'];
                 $statusCode = 404;
             } elseif ($e instanceof \InvalidArgumentException || $e instanceof ServiceInvalidArgumentException) {

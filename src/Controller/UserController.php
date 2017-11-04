@@ -35,14 +35,14 @@ class UserController extends Controller
      * 
      * @Get('/{userId}')
      */
-    public function get($id)
+    public function get($userId)
     {
-        // $user = $this->getUserService()->geteUser($id);
-        // if (empty($user)) {
+        $user = $this->getUserService()->getUser($userId);
+        if (empty($user)) {
+            $this->throwNotFoundException("User is not exist.");
+        }
 
-        // }
-
-        // return $this->item($user, 'User');
+        return $this->item($user, 'User');
     }
 
     /**
@@ -53,8 +53,8 @@ class UserController extends Controller
     public function create()
     {
         $user = $this->request->getPost();
-
-        return $this->getUserService()->createUser($user);
+        $user = $this->getUserService()->createUser($user);
+        return $this->item($user, 'User');
     }
 
     /**
@@ -68,13 +68,39 @@ class UserController extends Controller
     }
 
     /**
+     * 禁用用户
+     * 
+     * @Post('/{userId}/actions/ban')
+     *
+     * @return void
+     */
+    public function ban($userId)
+    {
+        $this->getUserService()->banUser($userId);
+        return $this->success();
+    }
+
+    /**
+     * 解禁用户
+     * 
+     * @Post('/{userId}/actions/ban')
+     *
+     * @return void
+     */
+    public function unban($userId)
+    {
+        $this->getUserService()->unbanUser($userId);
+        return $this->success();
+    }
+
+    /**
      * 检索用户的照片
      * 
      * @Get('/{userId}/photos')
      */
     public function searchPhotos()
     {
-        return $this->success();
+
     }
 
     /**
@@ -88,30 +114,6 @@ class UserController extends Controller
     public function getPhoto()
     {
 
-    }
-
-    /**
-     * 重置用户的密码
-     *
-     * @Post('/{userId}/actions/reset_password')
-     * 
-     * @return void
-     */
-    public function resetPassword()
-    {
-        return $this->success();
-    }
-
-    /**
-     * 禁用用户
-     * 
-     * @Post('/{userId}/actions/ban')
-     *
-     * @return void
-     */
-    public function ban($userId)
-    {
-        return $this->success();
     }
 
     protected function getUserService()

@@ -11,8 +11,8 @@
 * 集成了接口鉴权机制。[TODO]
 * 提供了接口样例代码。
 * 集成[Codeception](http://codeception.com/)的单元测试、接口测试。
-* 集成 APIBlueprint 标准的API文档工具。[TODO]
 * 集成 Gitlab CI。[TODO]
+* 集成 APIBlueprint 标准的API文档工具。[TODO]
 
 ## 安装
 
