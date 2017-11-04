@@ -83,7 +83,6 @@ class UserServiceTest extends \Codeception\Test\Unit
             'id' => 1,
             'username' => 'test',
             'password' => 'test_password',
-            'salt' => 'test_salt',
             'created_at' => time(),
             'updated_at' => time(),
         ], $user);

@@ -17,7 +17,6 @@ class UserCest extends BaseCest
     {
         $I->sendPOST('/users', [
             'username' => 'test_username',
-            'email' => 'test@example.com',
             'password' => 'test_password',
         ]);
 

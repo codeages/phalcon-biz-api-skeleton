@@ -37,8 +37,7 @@ class UserServiceImpl extends BaseService implements UserService
             throw new InvalidArgumentException("用户名已存在，注册失败！");
         }
 
-        $user['salt'] = Uuid::generate(4);
-        $user['password'] = $this->encodePassword($user['password'], $user['salt']);
+        $user['password'] = password_hash($user['password'], PASSWORD_BCRYPT);
         
         return $this->getUserDao()->create($user);
     }
@@ -65,14 +64,6 @@ class UserServiceImpl extends BaseService implements UserService
         $this->getUserDao()->update($id, [
             'is_banned' => 0,
         ]);
-    }
-
-    protected function encodePassword($password, $salt)
-    {
-        $options = [
-            'salt' => $salt,
-        ];
-        return password_hash($password, PASSWORD_BCRYPT, $options);
     }
 
     /**

@@ -8,7 +8,6 @@ class UserType extends \Codeages\PhalconBiz\AbstractTransformType
         return [
             'id' => (int) $item['id'],
             'username' => $item['username'],
-            'email' => $item['email'],
         ];
     }
 }
