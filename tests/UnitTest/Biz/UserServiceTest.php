@@ -57,17 +57,24 @@ class UserServiceTest extends \Codeception\Test\Unit
         $this->getUserService()->createUser($user);
     }
 
-    /**
-     * @group current
-     *
-     * @return void
-     */
     public function testBanUser()
     {
         $user = $this->fakeUser();
+
         $this->getUserService()->banUser($user['id']);
 
         $this->tester->seeInDatabase($this->getUserTable(), ['id' => $user['id'], 'is_banned' => 1]);
+    }
+
+    public function testUnbanUser()
+    {
+        $user = $this->fakeUser([
+            'is_banned' => 1,
+        ]);
+        
+        $this->getUserService()->unbanUser($user['id']);
+
+        $this->tester->seeInDatabase($this->getUserTable(), ['id' => $user['id'], 'is_banned' => 0]);
     }
 
     protected function fakeUser($user = [])

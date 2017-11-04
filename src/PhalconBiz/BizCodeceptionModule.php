@@ -7,7 +7,7 @@ use Codeages\Biz\Framework\Utility\Env;
 use Codeages\Biz\Framework\Context\Biz;
 use Codeception\Exception\ModuleRequireException;
 
-class BizCodeceptionModule extends CodeceptionModule
+class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib\Interfaces\Db
 {
     protected $bizConfig;
 
@@ -89,23 +89,53 @@ class BizCodeceptionModule extends CodeceptionModule
 
     public function seeInDatabase($table, $criteria = [])
     {
+        $res = $this->countInDatabase($table, $criteria);
+        $this->assertGreaterThan(
+            0,
+            $res,
+            'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table
+        );
+    }
+
+    public function dontSeeInDatabase($table, $criteria = [])
+    {
+        $count = $this->countInDatabase($table, $criteria);
+        $this->assertLessThan(
+            1,
+            $count,
+            'Unexpectedly found matching records for criteria ' . json_encode($criteria) . ' in table ' . $table
+        );
+    }
+
+    public function grabFromDatabase($table, $column, $criteria = [])
+    {
+        return $this->proceedSeeInDatabase($table, 'COUNT(*)', $criteria);
+    }
+
+    protected function countInDatabase($table, $criteria = [])
+    {
+        return (int) $this->proceedSeeInDatabase($table, 'COUNT(*)', $criteria);
+    }
+
+    protected function proceedSeeInDatabase($table, $column, $criteria)
+    {
         $builder = $this->biz['db']->createQueryBuilder()
-            ->select("COUNT(*)")
+            ->select($column)
             ->from($table);
-        
+    
         $index = 0; 
         foreach($criteria as $field => $value) {
             $builder->where("{$field} = ?");
             $builder->setParameter($index, $value);
         }
 
-        $res = (int) $builder->execute()->fetchColumn(0);
+        $this->debugSection('Query', $builder->getSQL());
+        $parameters = array_values($criteria);
+        if (!empty($parameters)) {
+            $this->debugSection('Parameters', $parameters);
+        }
 
-        $this->assertGreaterThan(
-            0,
-            $res,
-            'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table
-        );
+        return $builder->execute()->fetchColumn(0);
     }
 
     public function _before(\Codeception\TestInterface $test)
