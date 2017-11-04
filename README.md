@@ -58,14 +58,12 @@ bin/codecept run api # 只运行接口测试
 ```
 server {
     listen        80;
-    server_name   biz-api.local.cg-dev.cn;
+    server_name   phalcon-biz-api-skeleton.local.cg-dev.cn;
 
-    root /var/www/app-store/public;
+    root /var/www/phalcon-biz-api-skeleton/public;
     index index.php index.html index.htm;
 
     charset utf-8;
-    client_max_body_size 100M;
-    fastcgi_read_timeout 1800;
 
     location / {
         try_files $uri $uri/ /index.php?_url=$uri&$args;
@@ -92,7 +90,7 @@ server {
         access_log    off;
     }
 
-    access_log /var/log/nginx/biz-api.access.log;
-    error_log /var/log/nginx/biz-api.error.log;
+    access_log /var/log/nginx/phalcon-biz-api-skeleton.access.log;
+    error_log /var/log/nginx/phalcon-biz-api-skeleton.error.log;
 }
 ```
