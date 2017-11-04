@@ -1,4 +1,4 @@
 /vendor
 /var
-env.php
 /composer.lock
+/env.php

@@ -5,7 +5,7 @@
 ## 特性
 
 * 使用Phalcon作为接口接入层框架，BizFramework作为业务层框架。
-* 通过 Composer 初始化项目。 [TODO]
+* 通过 Composer 初始化项目。
 * 通过注解的方式配置路由。
 * 定义了标准的接口响应格式、通用错误码。
 * 集成了接口鉴权机制。[TODO]
@@ -22,8 +22,17 @@ composer create-project codeages/phalcon-biz-api-skeleton my_api_project
 
 ## 开发
 
-**启动接口服务：**
+**创建数据库：**
+```shell
+CREATE DATABASE `my_api_db`;
+```
 
+**执行数据库变更脚本：**
+```shell
+bin/phpmig migrate
+```
+
+**启动接口服务：**
 ```shell
 php -S localhost:8000 -t public .htrouter.php
 ```
