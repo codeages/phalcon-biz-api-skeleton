@@ -23,6 +23,11 @@
         "codeception/codeception": "^2.3",
         "phalcon/ide-stubs": "^3.2"
     },
+    "scripts": {
+        "post-install-cmd": [
+            "Codeages\\PhalconBiz\\ComposerScriptHandler::buildEnv"
+        ]
+    },
     "config" : {
         "bin-dir" : "bin"
     }
