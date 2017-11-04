@@ -5,6 +5,7 @@ use Biz\User\Dao\UserDao;
 use Biz\User\Service\UserService;
 use Codeages\Biz\Framework\Service\BaseService;
 use Codeages\Biz\Framework\Service\Exception\InvalidArgumentException;
+use Codeages\Biz\Framework\Service\Exception\NotFoundException;
 use Webpatser\Uuid\Uuid;
 
 class UserServiceImpl extends BaseService implements UserService
@@ -44,7 +45,26 @@ class UserServiceImpl extends BaseService implements UserService
 
     public function banUser($id)
     {
+        $user = $this->getUserDao()->get($id);
+        if (empty($user)) {
+            throw new NotFoundException("用户不存在#{$id}，封禁失败。");
+        }
 
+        $this->getUserDao()->update($id, [
+            'is_banned' => 1,
+        ]);
+    }
+
+    public function unbanUser($id)
+    {
+        $user = $this->getUserDao()->get($id);
+        if (empty($user)) {
+            throw new NotFoundException("用户不存在#{$id}，解禁失败。");
+        }
+
+        $this->getUserDao()->update($id, [
+            'is_banned' => 0,
+        ]);
     }
 
     protected function encodePassword($password, $salt)

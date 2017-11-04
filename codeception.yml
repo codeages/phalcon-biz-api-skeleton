@@ -6,12 +6,8 @@ suites:
         modules:
             enabled:
                 # add more modules here
+                - Codeages\PhalconBiz\BizCodeceptionModule
                 - Asserts
-                - Db:
-                    dsn: 'mysql:host=localhost;dbname=app-store-testing'
-                    user: 'root'
-                    password: ''
-                    reconnect: true
     api:
         path: ApiTest
         actor: ApiTester
@@ -19,9 +15,9 @@ suites:
             enabled:
                 - \Test\Helper\Api
                 - Db:
-                    dsn: 'mysql:host=localhost;dbname=app-store-testing'
-                    user: 'root'
-                    password: ''
+                    dsn: 'mysql:host=%DB_HOST%;dbname=%DB_NAME%'
+                    user: '%DB_USER%'
+                    password: '%DB_PASSWORD%'
                     dump: 'tests/_data/dump.sql'
                     populate: false
                     cleanup: false
@@ -39,3 +35,5 @@ paths:
     output: tests/_output
     support: tests/_support
     data: tests
+params:
+    - env.testing.php

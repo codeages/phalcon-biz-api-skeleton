@@ -13,4 +13,6 @@ interface UserService
     public function createUser($user);
     
     public function banUser($id);
+
+    public function unbanUser($id);
 }
