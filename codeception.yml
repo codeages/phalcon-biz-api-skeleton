@@ -14,14 +14,7 @@ suites:
         modules:
             enabled:
                 - \Test\Helper\Api
-                - Db:
-                    dsn: 'mysql:host=%DB_HOST%;dbname=%DB_NAME%'
-                    user: '%DB_USER%'
-                    password: '%DB_PASSWORD%'
-                    dump: 'tests/_data/dump.sql'
-                    populate: false
-                    cleanup: false
-                    reconnect: true
+                - Codeages\PhalconBiz\BizCodeceptionModule
                 - REST:
                     url: http://localhost:8000
                     depends: PhpBrowser
@@ -35,5 +28,3 @@ paths:
     output: tests/_output
     support: tests/_support
     data: tests
-params:
-    - env.testing.php

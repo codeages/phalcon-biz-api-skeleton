@@ -97,6 +97,35 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
         );
     }
 
+    /**
+     * Asserts that the given number of records were found in the database.
+     *
+     * ```php
+     * <?php
+     * $I->seeNumRecords(1, 'users', ['name' => 'davert'])
+     * ?>
+     * ```
+     *
+     * @param int $expectedNumber Expected number
+     * @param string $table Table name
+     * @param array $criteria Search criteria [Optional]
+     */
+    public function seeNumRecords($expectedNumber, $table, array $criteria = [])
+    {
+        $actualNumber = $this->countInDatabase($table, $criteria);
+        $this->assertEquals(
+            $expectedNumber,
+            $actualNumber,
+            sprintf(
+                'The number of found rows (%d) does not match expected number %d for criteria %s in table %s',
+                $actualNumber,
+                $expectedNumber,
+                json_encode($criteria),
+                $table
+            )
+        );
+    }
+
     public function dontSeeInDatabase($table, $criteria = [])
     {
         $count = $this->countInDatabase($table, $criteria);
@@ -109,7 +138,51 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
 
     public function grabFromDatabase($table, $column, $criteria = [])
     {
-        return $this->proceedSeeInDatabase($table, 'COUNT(*)', $criteria);
+        return $this->proceedSeeInDatabase($table, $column, $criteria);
+    }
+
+    /**
+     * Returns the number of rows in a database
+     *
+     * @param string $table    Table name
+     * @param array  $criteria Search criteria [Optional]
+     *
+     * @return int
+     */
+    public function grabNumRecords($table, array $criteria = [])
+    {
+        return $this->countInDatabase($table, $criteria);
+    }
+
+    /**
+     * Update an SQL record into a database.
+     *
+     * ```php
+     * <?php
+     * $I->updateInDatabase('users', array('isAdmin' => true), array('email' => 'miles@davis.com'));
+     * ?>
+     * ```
+     *
+     * @param string $table
+     * @param array $data
+     * @param array $criteria
+     */
+    public function updateInDatabase($table, array $data, array $criteria = [])
+    {
+        $queryBuilder
+            ->update($table)
+            ->values($data);
+        
+        $index = 0; 
+        foreach($criteria as $field => $value) {
+            $builder->andWhere("{$field} = :{$field}");
+            $builder->setParameter(":{$field}", $value);
+        }
+
+        $this->debugSection('Query', $builder->getSQL());
+        $this->debugSection('Parameters', $criteria);
+
+        $builder->execute();
     }
 
     protected function countInDatabase($table, $criteria = [])
@@ -125,15 +198,12 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
     
         $index = 0; 
         foreach($criteria as $field => $value) {
-            $builder->where("{$field} = ?");
-            $builder->setParameter($index, $value);
+            $builder->andWhere("{$field} = :{$field}");
+            $builder->setParameter(":{$field}", $value);
         }
 
         $this->debugSection('Query', $builder->getSQL());
-        $parameters = array_values($criteria);
-        if (!empty($parameters)) {
-            $this->debugSection('Parameters', $parameters);
-        }
+        $this->debugSection('Parameters', $criteria);
 
         return $builder->execute()->fetchColumn(0);
     }
@@ -167,10 +237,5 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
 
         unset($this->biz);
         parent::_after($test);
-    }
-
-    public function seeHello()
-    {
-        echo 'hello';
     }
 }
