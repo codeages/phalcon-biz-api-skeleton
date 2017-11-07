@@ -4,11 +4,15 @@ namespace Codeages\PhalconBiz;
 use Codeages\Biz\Framework\Context\Biz;
 use Phalcon\DiInterface;
 use Phalcon\Di;
+use Phalcon\Http\RequestInterface;
 use Phalcon\Http\ResponseInterface;
-use Codeages\Biz\Framework\Service\Exception\ServiceException;
-use Codeages\Biz\Framework\Service\Exception\NotFoundException as ServiceNotFoundException;
-use Codeages\Biz\Framework\Service\Exception\InvalidArgumentException as ServiceInvalidArgumentException;
-use Codeages\Biz\Framework\Service\Exception\AccessDeniedException as ServiceAccessDeniedException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeages\PhalconBiz\Event\GetResponseEvent;
+use Codeages\PhalconBiz\Event\FinishRequestEvent;
+use Codeages\PhalconBiz\Event\FilterResponseEvent;
+use Codeages\PhalconBiz\Event\GetResponseForExceptionEvent;
+use Codeages\PhalconBiz\Event\WebEvents;
+
 
 class Application
 {
@@ -24,11 +28,15 @@ class Application
 
     protected $debug = false;
 
-    public function __construct(Biz $biz)
+    protected $config;
+
+    public function __construct(Biz $biz, $config = [])
     {
-        $this->di = $this->initializeContainer();
-        $this->di['biz'] = $this->biz = $biz;
+        $this->biz = $biz;
+        $this->config = $config;
         $this->debug = isset($biz['debug']) ? $biz['debug'] : false;
+        $this->di = $this->initializeContainer();
+        $this->di['biz'] = $biz; 
     }
 
     /**
@@ -41,6 +49,11 @@ class Application
         return $this->di;
     }
 
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
     protected function initializeContainer()
     {
         $di = new Di();
@@ -49,7 +62,7 @@ class Application
             return new \Phalcon\Annotations\Adapter\Memory();
         });
 
-        $di->setShared('dispatcher', function () {
+        $di->setShared('mvc_dispatcher', function () {
             return new \Phalcon\Mvc\Dispatcher();
         });
 
@@ -73,72 +86,80 @@ class Application
         $di->set('response', function() {
             return new \Phalcon\Http\Response();
         });
+        
+        $subscribers = $this->config['subscribers'] ?? [];
+        $di->set('event_dispatcher', function() use ($subscribers) {
+            $dispatcher = new EventDispatcher();
+
+            foreach ($subscribers as $subscriber) {
+                $dispatcher->addSubscriber(new $subscriber());
+            }
+            return $dispatcher;
+        });
 
         return $di;
     }
 
-    protected function formatExceptionDetail($e)
+    public function handle()
     {
-        $error = [
-            'type' => get_class($e),
-            'code' => $e->getCode(),
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTrace(),
-        ];
-
-        if ($e->getPrevious()) {
-            $error = [$error];
-            $newError = $this->formatExceptionDetail($e->getPrevious());
-            array_unshift($error, $newError);
+        $request = $this->di['request'];
+        try {
+            $response = $this->doHandle();
+        } catch (\Exception $e) {
+            $response = $this->handleException($e, $request);
         }
 
-        return $error;
+        if ($response instanceof ResponseInterface) {
+            $response->send();
+            return ;
+        }
+
+        if (is_array($response)) {
+            $content = $response;
+            $response = $this->di['response'];
+            $response->setStatusCode(200);
+            $response->setContent(json_encode($content));
+            $response->send();
+            return ;
+        }
     }
 
-    public function handle()
+    private function handleException(\Exception $e, $request)
+    {
+        $event = new GetResponseForExceptionEvent($this, $request, $e);
+        $this->di['event_dispatcher']->dispatch(WebEvents::EXCEPTION, $event);
+
+        // a listener might have replaced the exception
+        $e = $event->getException();
+
+        if (!$event->hasResponse()) {
+            $this->finishRequest($request);
+            throw $e;
+        }
+
+        $response = $event->getResponse();
+
+        try {
+            return $this->filterResponse($response, $request);
+        } catch (\Exception $e) {
+            return $response;
+        }
+    }
+
+    public function handle2()
     {
         $error = null;
         $statusCode = 0;
         try {
             $returned = $this->doHandle();
         } catch (\Exception $e) {
-            if ($e instanceof ServiceException) {
-                $error = ['code' => $e->getCode(), 'message' => $e->getMessage()];
-                $statusCode = 400;
-            } elseif ($e instanceof NotFoundException || $e instanceof ServiceNotFoundException) {
-                $error = ['code' => ErrorCode::RESOURCE_NOT_FOUND, 'message' => $e->getMessage() ? : 'Resource Not Found.'];
-                $statusCode = 404;
-            } elseif ($e instanceof \InvalidArgumentException || $e instanceof ServiceInvalidArgumentException) {
-                $error = ['code' => ErrorCode::INVALID_ARGUMENT, 'message' => $e->getMessage()];
-                $statusCode = 422;
-            } elseif ($e instanceof ServiceAccessDeniedException) {
-                $error = ['code' => ErrorCode::ACCESS_DENIED, 'message' => $e->getMessage() ? : 'Access denied.'];
-                $statusCode = 405;
-            } else {
-                $error = [
-                    'code' => ErrorCode::SERVICE_UNAVAILABLE,
-                    'message' => $this->debug ? $e->getMessage() : 'Service unavailable.'
-                ];
-                $statusCode = 500;
-            }
+
         } catch (\Throwable $e) {
             $error = [
                 'code' => ErrorCode::SERVICE_UNAVAILABLE,
                 'message' => $this->debug ? $e->getMessage() : 'Service unavailable.'
             ];
             $statusCode = 500;
-        }
-
-        if ($error) {
-            $error['trace_id'] = time().'_'.substr(hash('md5', uniqid('', true)), 0, 10);
-
-            if ($this->debug) {
-                $error['detail'] = $this->formatExceptionDetail($e);
-            }
-
-            $returned = ['error' => $error];
         }
 
         if ($returned instanceof ResponseInterface) {
@@ -167,6 +188,14 @@ class Application
 
     public function doHandle()
     {
+        $request = $this->di['request'];
+        $event = new GetResponseEvent($this, $request);
+        $this->di['event_dispatcher']->dispatch(WebEvents::REQUEST, $event);
+
+        if ($event->hasResponse()) {
+            return $this->filterResponse($event->getResponse(), $request, $type);
+        }
+
         $router = $this->di['router'];
 
         $discovery = new ApiDiscovery($router);
@@ -175,10 +204,10 @@ class Application
         $router->handle();
 
         if (!$router->getMatchedRoute()) {
-            throw new NotFoundHttpException();
+            throw new NotFoundException();
         }
 
-        $dispatcher = $this->di['dispatcher'];
+        $dispatcher = $this->di['mvc_dispatcher'];
 
         $dispatcher->setControllerSuffix('');
         $dispatcher->setActionSuffix('');
@@ -196,5 +225,34 @@ class Application
         
         $dispatcher->dispatch();
         return $dispatcher->getReturnedValue();
+    }
+
+    /**
+     * 过滤 Response
+     *
+     * @param ResponseInterface $response 
+     * @param RequestInterface  $request  
+     *
+     * @return Response 过滤后的 Response 实例
+     */
+    private function filterResponse(ResponseInterface $response, RequestInterface $request)
+    {
+        $event = new FilterResponseEvent($this, $request, $response);
+
+        $this->di['event_dispatcher']->dispatch(WebEvents::RESPONSE, $event);
+
+        $this->finishRequest($request);
+
+        return $event->getResponse();
+    }
+
+    /**
+     * 派发完成请求的事件
+     *
+     * @param RequestInterface $request
+     */
+    private function finishRequest(RequestInterface $request)
+    {
+        $this->di['event_dispatcher']->dispatch(WebEvents::FINISH_REQUEST, new FinishRequestEvent($this, $request));
     }
 }

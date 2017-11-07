@@ -1,4 +1,11 @@
 <?php
+
+use Codeages\PhalconBiz\Application;
+
 $biz = require __DIR__.'/bootstrap_biz.php';
 
-return new Codeages\PhalconBiz\Application($biz);
+$config = require ROOT_DIR.'/config/app.php';
+$app = new Application($biz, $config);
+
+
+return $app;
