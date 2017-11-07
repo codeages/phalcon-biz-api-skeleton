@@ -9,6 +9,7 @@
 * 通过注解的方式配置路由。
 * 定义了标准的接口响应格式、通用错误码。
 * 集成了接口鉴权机制。[TODO]
+* 集成频率控制。[TODO]
 * 提供了接口样例代码。
 * 集成[Codeception](http://codeception.com/)的单元测试、接口测试。
 * 集成 Gitlab CI。[TODO]
