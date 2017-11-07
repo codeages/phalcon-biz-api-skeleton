@@ -13,7 +13,6 @@ use Codeages\PhalconBiz\Event\FilterResponseEvent;
 use Codeages\PhalconBiz\Event\GetResponseForExceptionEvent;
 use Codeages\PhalconBiz\Event\WebEvents;
 
-
 class Application
 {
     /**
@@ -105,7 +104,19 @@ class Application
         $request = $this->di['request'];
         try {
             $response = $this->doHandle();
+            if (!is_array($response) && !($response instanceof ResponseInterface)) {
+                $response = $this->di['response'];
+                $response->setStatusCode(500);
+                $response->setContent(json_encode([
+                    'error' => [
+                        'code' => ErrorCode::SERVICE_UNAVAILABLE,
+                        'mesage' => 'Controller action must be return response object or array.',
+                    ]
+                ]));
+            }
         } catch (\Exception $e) {
+            $response = $this->handleException($e, $request);
+        } catch (\Throwable $e) {
             $response = $this->handleException($e, $request);
         }
 
@@ -144,46 +155,6 @@ class Application
         } catch (\Exception $e) {
             return $response;
         }
-    }
-
-    public function handle2()
-    {
-        $error = null;
-        $statusCode = 0;
-        try {
-            $returned = $this->doHandle();
-        } catch (\Exception $e) {
-
-        } catch (\Throwable $e) {
-            $error = [
-                'code' => ErrorCode::SERVICE_UNAVAILABLE,
-                'message' => $this->debug ? $e->getMessage() : 'Service unavailable.'
-            ];
-            $statusCode = 500;
-        }
-
-        if ($returned instanceof ResponseInterface) {
-            $returned->send();
-            return ;
-        }
-
-        if (is_array($returned)) {
-            $response = $this->di['response'];
-            $response->setStatusCode($statusCode ? : 200);
-            $response->setContent(json_encode($returned));
-            $response->send();
-            return ;
-        }
-
-        $response = $this->di['response'];
-        $response->setStatusCode(500);
-        $response->setContent(json_encode([
-            'error' => [
-                'code' => ErrorCode::SERVICE_UNAVAILABLE,
-                'mesage' => 'Controller action must be return response object or array.',
-            ]
-        ]));
-        $response->send();
     }
 
     public function doHandle()
