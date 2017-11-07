@@ -27,6 +27,19 @@ final class WebEvents
      * @var string
      */
     const EXCEPTION = 'web.exception';
+
+    /**
+     * The VIEW event occurs when the return value of a controller
+     * is not a Response instance.
+     *
+     * This event allows you to create a response for the return value of the
+     * controller.
+     *
+     * @Event("Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent")
+     *
+     * @var string
+     */
+    const VIEW = 'web.view';
     
     /**
      * The RESPONSE event occurs once a response was created for

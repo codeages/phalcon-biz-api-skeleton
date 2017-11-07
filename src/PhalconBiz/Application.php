@@ -11,6 +11,7 @@ use Codeages\PhalconBiz\Event\GetResponseEvent;
 use Codeages\PhalconBiz\Event\FinishRequestEvent;
 use Codeages\PhalconBiz\Event\FilterResponseEvent;
 use Codeages\PhalconBiz\Event\GetResponseForExceptionEvent;
+use Codeages\PhalconBiz\Event\GetResponseForControllerResultEvent;
 use Codeages\PhalconBiz\Event\WebEvents;
 
 class Application
@@ -104,19 +105,7 @@ class Application
         $request = $this->di['request'];
         try {
             $response = $this->doHandle();
-            if (!is_array($response) && !($response instanceof ResponseInterface)) {
-                $response = $this->di['response'];
-                $response->setStatusCode(500);
-                $response->setContent(json_encode([
-                    'error' => [
-                        'code' => ErrorCode::SERVICE_UNAVAILABLE,
-                        'mesage' => 'Controller action must be return response object or array.',
-                    ]
-                ]));
-            }
         } catch (\Exception $e) {
-            $response = $this->handleException($e, $request);
-        } catch (\Throwable $e) {
             $response = $this->handleException($e, $request);
         }
 
@@ -140,7 +129,7 @@ class Application
         $event = new GetResponseForExceptionEvent($this, $request, $e);
         $this->di['event_dispatcher']->dispatch(WebEvents::EXCEPTION, $event);
 
-        // a listener might have replaced the exception
+        // Listener 中可能会重设 Exception，所以这里重新获取了 Exception。
         $e = $event->getException();
 
         if (!$event->hasResponse()) {
@@ -195,7 +184,27 @@ class Application
         );
         
         $dispatcher->dispatch();
-        return $dispatcher->getReturnedValue();
+        $response = $dispatcher->getReturnedValue();
+
+        // view
+        if (!$response instanceof ResponseInterface) {
+            $event = new GetResponseForControllerResultEvent($this, $request, $response);
+            $this->di['event_dispatcher']->dispatch(WebEvents::VIEW, $event);
+
+            if ($event->hasResponse()) {
+                $response = $event->getResponse();
+            }
+
+            if (!$response instanceof ResponseInterface) {
+                $msg = 'The controller must return a response.';
+                if (null === $response) {
+                    $msg .= ' Did you forget to add a return statement somewhere in your controller?';
+                }
+                throw new \LogicException($msg);
+            }
+        }
+
+        return $response;
     }
 
     /**
