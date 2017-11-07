@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz;
 
 use Doctrine\DBAL\Connection;
@@ -10,7 +11,7 @@ class DbTestHelper
      * @var Connection
      */
     protected $db;
-    
+
     public function __construct($db)
     {
         if ($db instanceof Connection) {
@@ -22,15 +23,13 @@ class DbTestHelper
 
     /**
      * 清除所有表的数据，表名前缀为`migration`的表除外。
-     *
-     * @return void
      */
     public function truncateAllTables()
     {
         $schema = $this->db->getSchemaManager();
         $tableNames = $schema->listTableNames();
         foreach ($tableNames as $tableName) {
-            if (\strpos($tableName, 'migration') === 0) {
+            if (0 === \strpos($tableName, 'migration')) {
                 continue;
             }
             $sql = "TRUNCATE {$tableName}";

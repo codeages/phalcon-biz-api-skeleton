@@ -1,7 +1,6 @@
 <?php
-namespace Test\UnitTest\Biz;
 
-use Test\UnitTest\BaseTest;
+namespace Test\UnitTest\Biz;
 
 class UserServiceTest extends \Codeception\Test\Unit
 {
@@ -29,7 +28,7 @@ class UserServiceTest extends \Codeception\Test\Unit
     }
 
     /**
-     * @expectedException Codeages\Biz\Framework\Service\Exception\InvalidArgumentException
+     * @expectedException \Codeages\Biz\Framework\Service\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /用户名已存在/
      */
     public function testCreateUserWithExistUsernameThanThrowException()
@@ -43,7 +42,7 @@ class UserServiceTest extends \Codeception\Test\Unit
     }
 
     /**
-     * @expectedException Codeages\Biz\Framework\Validation\ValidationException
+     * @expectedException \Codeages\Biz\Framework\Validation\ValidationException
      */
     public function testCreateUserWithUsernameHasInvalidLengthThanThrowException()
     {
@@ -52,7 +51,7 @@ class UserServiceTest extends \Codeception\Test\Unit
             'username' => 'testtest1234567890123456789',
             'password' => 'test_password',
             'salt' => 'test_salt',
-            'is_banned' => 0
+            'is_banned' => 0,
         ];
         $this->getUserService()->createUser($user);
     }
@@ -71,7 +70,7 @@ class UserServiceTest extends \Codeception\Test\Unit
         $user = $this->fakeUser([
             'is_banned' => 1,
         ]);
-        
+
         $this->getUserService()->unbanUser($user['id']);
 
         $this->tester->seeInDatabase($this->getUserTable(), ['id' => $user['id'], 'is_banned' => 0]);

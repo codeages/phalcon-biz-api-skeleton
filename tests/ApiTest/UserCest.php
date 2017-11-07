@@ -1,9 +1,9 @@
 <?php
+
 namespace Test\ApiTest;
 
 use Test\ApiTester;
 use Codeception\Util\HttpCode;
-use Codeages\PhalconBiz\ErrorCode;
 
 class UserCest extends BaseCest
 {
@@ -28,7 +28,7 @@ class UserCest extends BaseCest
     public function getUserWithNotExistThenResopnseError(ApiTester $I)
     {
         $I->sendGET('/users/99999');
-        $I->seeResponseCodeIs(HttpCode::NOT_FOUND); 
+        $I->seeResponseCodeIs(HttpCode::NOT_FOUND);
         $I->seeResponseJsonMatchesJsonPath('$.error');
         $I->assertEquals(self::RESOURCE_NOT_FOUND_ERROR, $I->grabDataFromResponseByJsonPath('$.error.code')[0]);
     }
@@ -37,7 +37,7 @@ class UserCest extends BaseCest
     {
         // happy pass
         $I->sendGET('/users');
-        $I->seeResponseCodeIs(HttpCode::OK); 
+        $I->seeResponseCodeIs(HttpCode::OK);
         $I->seeResponseIsJson();
     }
 
@@ -50,7 +50,7 @@ class UserCest extends BaseCest
 
         $I->sendPOST('/users', $user);
 
-        $I->seeResponseCodeIs(HttpCode::OK); 
+        $I->seeResponseCodeIs(HttpCode::OK);
         $I->seeResponseMatchesJsonType([
             'id' => 'integer:>0', // multiple types
             'username' => 'string',
@@ -58,8 +58,8 @@ class UserCest extends BaseCest
             'updated_at' => 'string:date',
        ]);
 
-       $I->assertEquals($user['username'], $I->grabDataFromResponseByJsonPath('$.username')[0]);
-       $I->dontSeeResponseJsonMatchesJsonPath('$.password');
+        $I->assertEquals($user['username'], $I->grabDataFromResponseByJsonPath('$.username')[0]);
+        $I->dontSeeResponseJsonMatchesJsonPath('$.password');
     }
 
     public function banUser(ApiTester $I)

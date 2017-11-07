@@ -13,7 +13,7 @@ class UserDaoImpl extends GeneralDaoImpl implements UserDao
     {
         return $this->getByFields(['username' => $username]);
     }
-    
+
     public function getByEmail($email)
     {
         return $this->getByFields(['email' => $email]);

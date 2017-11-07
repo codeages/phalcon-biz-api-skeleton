@@ -1,11 +1,10 @@
 <?php
+
 namespace Biz;
 
-use Codeages\Beanstalk\Client;
 use Codeages\Biz\Framework\Context\Biz;
 use Codeages\Biz\Framework\Provider\MonologServiceProvider;
 use Codeages\Biz\Framework\Provider\DoctrineServiceProvider;
-use Codeages\Biz\Framework\Provider\TargetlogServiceProvider;
 use Codeages\Biz\Framework\Validation\SimpleValidator;
 
 class AppBiz extends Biz
@@ -20,8 +19,8 @@ class AppBiz extends Biz
             'monolog.logfile' => $this['log_dir'].'/app.log',
         ]);
 
-        $this['validator'] = $this->factory(function(){
+        $this['validator'] = $this->factory(function () {
             return new SimpleValidator();
-        }); 
+        });
     }
 }

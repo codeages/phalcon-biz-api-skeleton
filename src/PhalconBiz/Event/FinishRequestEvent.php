@@ -1,9 +1,7 @@
 <?php
-namespace Codeages\PhalconBiz\Event;
 
-use Phalcon\Http\ResponseInterface;
+namespace Codeages\PhalconBiz\Event;
 
 class FinishRequestEvent extends WebEvent
 {
-
 }

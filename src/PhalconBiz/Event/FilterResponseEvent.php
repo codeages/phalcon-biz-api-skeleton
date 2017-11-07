@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz\Event;
 
 use Phalcon\Http\RequestInterface;

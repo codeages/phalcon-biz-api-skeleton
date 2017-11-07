@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz;
 
 use Composer\Script\Event;
@@ -20,7 +21,7 @@ class ComposerScriptHandler
             $env[$key] = self::convertValueToPhp($value);
         }
 
-        $content = "<?php \n\nreturn ". var_export($env, true) . ";";
+        $content = "<?php \n\nreturn ".var_export($env, true).';';
 
         \file_put_contents('env.php', $content);
 
@@ -33,24 +34,24 @@ class ComposerScriptHandler
 
     protected static function convertValueToDisplay($value)
     {
-        if ($value === true) {
+        if (true === $value) {
             $displayValue = 'true';
-        } elseif ($value === false) {
+        } elseif (false === $value) {
             $displayValue = 'false';
-        } elseif ($value === '') {
+        } elseif ('' === $value) {
             $displayValue = '<<empty>>';
         } else {
             $displayValue = $value;
         }
 
         return $displayValue;
-    } 
+    }
 
     protected static function convertValueToPhp($value)
     {
-        if ($value === 'true') {
+        if ('true' === $value) {
             $phpValue = true;
-        } elseif ($value === 'false') {
+        } elseif ('false' === $value) {
             $phpValue = false;
         } elseif (ctype_digit($value)) {
             $phpValue = intval($value);
@@ -60,5 +61,4 @@ class ComposerScriptHandler
 
         return $phpValue;
     }
-
 }

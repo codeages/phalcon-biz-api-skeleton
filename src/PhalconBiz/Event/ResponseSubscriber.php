@@ -1,8 +1,8 @@
 <?php
+
 namespace Codeages\PhalconBiz\Event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Codeages\PhalconBiz\Event\GetResponseForControllerResultEvent;
 
 class ResponseSubscriber implements EventSubscriberInterface
 {
@@ -24,8 +24,7 @@ class ResponseSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            WebEvents::VIEW => 'onView'
+            WebEvents::VIEW => 'onView',
         ];
     }
-
 }

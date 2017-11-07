@@ -1,7 +1,7 @@
 <?php
+
 namespace Codeages\PhalconBiz\Event;
 
-use Phalcon\Http\ResponseInterface;
 use Phalcon\Http\RequestInterface;
 
 class GetResponseForControllerResultEvent extends GetResponseEvent

@@ -1,4 +1,5 @@
 <?php
+
 return [
     'subscribers' => [
         'Codeages\\PhalconBiz\\Event\\AuthenticateSubscriber',

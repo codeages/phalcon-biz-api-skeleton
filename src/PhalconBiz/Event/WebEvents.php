@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz\Event;
 
 final class WebEvents
@@ -15,7 +16,7 @@ final class WebEvents
      * @var string
      */
     const REQUEST = 'web.request';
-    
+
     /**
      * The EXCEPTION event occurs when an uncaught exception appears.
      *
@@ -40,7 +41,7 @@ final class WebEvents
      * @var string
      */
     const VIEW = 'web.view';
-    
+
     /**
      * The RESPONSE event occurs once a response was created for
      * replying to a request.
@@ -53,7 +54,7 @@ final class WebEvents
      * @var string
      */
     const RESPONSE = 'web.response';
-    
+
     /**
      * The TERMINATE event occurs once a response was sent.
      *
@@ -64,7 +65,7 @@ final class WebEvents
      * @var string
      */
     const TERMINATE = 'web.terminate';
-    
+
     /**
      * The FINISH_REQUEST event occurs when a response was generated for a request.
      *
@@ -77,4 +78,3 @@ final class WebEvents
      */
     const FINISH_REQUEST = 'web.finish_request';
 }
-

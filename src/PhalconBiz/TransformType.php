@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz;
 
 interface TransformType

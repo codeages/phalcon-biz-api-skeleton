@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz;
 
 use Codeages\Biz\Framework\Context\Biz;
@@ -36,7 +37,7 @@ class Application
         $this->config = $config;
         $this->debug = isset($biz['debug']) ? $biz['debug'] : false;
         $this->di = $this->initializeContainer();
-        $this->di['biz'] = $biz; 
+        $this->di['biz'] = $biz;
     }
 
     /**
@@ -66,7 +67,7 @@ class Application
             return new \Phalcon\Mvc\Dispatcher();
         });
 
-        $di->setShared('filter', function() {
+        $di->setShared('filter', function () {
             return new \Phalcon\Filter();
         });
 
@@ -79,21 +80,22 @@ class Application
             return $router;
         });
 
-        $di->setShared('request', function() {
+        $di->setShared('request', function () {
             return new \Phalcon\Http\Request();
         });
 
-        $di->set('response', function() {
+        $di->set('response', function () {
             return new \Phalcon\Http\Response();
         });
-        
+
         $subscribers = $this->config['subscribers'] ?? [];
-        $di->set('event_dispatcher', function() use ($subscribers) {
+        $di->set('event_dispatcher', function () use ($subscribers) {
             $dispatcher = new EventDispatcher();
 
             foreach ($subscribers as $subscriber) {
                 $dispatcher->addSubscriber(new $subscriber());
             }
+
             return $dispatcher;
         });
 
@@ -111,7 +113,8 @@ class Application
 
         if ($response instanceof ResponseInterface) {
             $response->send();
-            return ;
+
+            return;
         }
 
         if (is_array($response)) {
@@ -120,7 +123,8 @@ class Application
             $response->setStatusCode(200);
             $response->setContent(json_encode($content));
             $response->send();
-            return ;
+
+            return;
         }
     }
 
@@ -182,7 +186,7 @@ class Application
         $dispatcher->setParams(
             $router->getParams()
         );
-        
+
         $dispatcher->dispatch();
         $response = $dispatcher->getReturnedValue();
 
@@ -210,8 +214,8 @@ class Application
     /**
      * 过滤 Response
      *
-     * @param ResponseInterface $response 
-     * @param RequestInterface  $request  
+     * @param ResponseInterface $response
+     * @param RequestInterface  $request
      *
      * @return Response 过滤后的 Response 实例
      */

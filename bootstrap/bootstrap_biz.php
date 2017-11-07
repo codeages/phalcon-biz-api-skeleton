@@ -1,6 +1,6 @@
 <?php
 
-if (getenv('IN_TESTING') === 'true') {
+if ('true' === getenv('IN_TESTING')) {
     \Codeages\Biz\Framework\Utility\Env::load(require ROOT_DIR.'/env.testing.php');
 } else {
     \Codeages\Biz\Framework\Utility\Env::load(require ROOT_DIR.'/env.php');

@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz\Event;
 
 use Phalcon\Http\ResponseInterface;
@@ -11,7 +12,7 @@ class GetResponseEvent extends WebEvent
      * @var ResponseInterface
      */
     private $response;
-    
+
     /**
      * Returns the response object.
      *
@@ -21,7 +22,7 @@ class GetResponseEvent extends WebEvent
     {
         return $this->response;
     }
-    
+
     /**
      * Sets a response and stops event propagation.
      *
@@ -33,7 +34,7 @@ class GetResponseEvent extends WebEvent
 
         $this->stopPropagation();
     }
-    
+
     /**
      * Returns whether a response was set.
      *

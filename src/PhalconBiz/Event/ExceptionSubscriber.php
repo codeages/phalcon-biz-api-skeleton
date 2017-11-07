@@ -1,8 +1,8 @@
 <?php
+
 namespace Codeages\PhalconBiz\Event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Codeages\PhalconBiz\Event\GetResponseForExceptionEvent;
 use Codeages\Biz\Framework\Service\Exception\ServiceException;
 use Codeages\Biz\Framework\Service\Exception\NotFoundException as ServiceNotFoundException;
 use Codeages\Biz\Framework\Service\Exception\InvalidArgumentException as ServiceInvalidArgumentException;
@@ -21,24 +21,24 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $error = ['code' => $e->getCode(), 'message' => $e->getMessage()];
             $statusCode = 400;
         } elseif ($e instanceof NotFoundException || $e instanceof ServiceNotFoundException) {
-            $error = ['code' => ErrorCode::RESOURCE_NOT_FOUND, 'message' => $e->getMessage() ? : 'Resource Not Found.'];
+            $error = ['code' => ErrorCode::RESOURCE_NOT_FOUND, 'message' => $e->getMessage() ?: 'Resource Not Found.'];
             $statusCode = 404;
         } elseif ($e instanceof \InvalidArgumentException || $e instanceof ServiceInvalidArgumentException) {
             $error = ['code' => ErrorCode::INVALID_ARGUMENT, 'message' => $e->getMessage()];
             $statusCode = 422;
         } elseif ($e instanceof ServiceAccessDeniedException) {
-            $error = ['code' => ErrorCode::ACCESS_DENIED, 'message' => $e->getMessage() ? : 'Access denied.'];
+            $error = ['code' => ErrorCode::ACCESS_DENIED, 'message' => $e->getMessage() ?: 'Access denied.'];
             $statusCode = 405;
         } else {
             $error = [
                 'code' => ErrorCode::SERVICE_UNAVAILABLE,
-                'message' => $debug ? $e->getMessage() : 'Service unavailable.'
+                'message' => $debug ? $e->getMessage() : 'Service unavailable.',
             ];
             $statusCode = 500;
         }
 
         $error['trace_id'] = time().'_'.substr(hash('md5', uniqid('', true)), 0, 10);
-        
+
         if ($debug) {
             $error['detail'] = $this->formatExceptionDetail($e);
         }
@@ -55,7 +55,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            WebEvents::EXCEPTION => 'onException'
+            WebEvents::EXCEPTION => 'onException',
         ];
     }
 

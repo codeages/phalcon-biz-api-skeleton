@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz;
 
 use Symfony\Component\Finder\Finder;
@@ -10,7 +11,7 @@ class ApiDiscovery
     /**
      * @var AnnotationRouter
      */
-    protected $router ;
+    protected $router;
 
     public function __construct(AnnotationRouter $router)
     {
@@ -23,9 +24,9 @@ class ApiDiscovery
         $finder->files()->in($directory)->name('*.php')->sortByName();
 
         $reader = new AnnotationReader();
-        
+
         foreach ($finder as $file) {
-            $class = $namespace . '\\'. $file->getBasename('.php');
+            $class = $namespace.'\\'.$file->getBasename('.php');
 
             if (!class_exists($class)) {
                 continue;

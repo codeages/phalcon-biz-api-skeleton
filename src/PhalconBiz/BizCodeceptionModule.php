@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz;
 
 use Codeception\Module as CodeceptionModule;
@@ -24,7 +25,7 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
 
     public function _initialize()
     {
-        $envFilePath = Configuration::projectDir() . $this->config['env_path'];
+        $envFilePath = Configuration::projectDir().$this->config['env_path'];
         if (!file_exists($envFilePath)) {
             throw new ModuleRequireException(
                 __CLASS__,
@@ -34,7 +35,7 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
         }
         Env::load(require $envFilePath);
 
-        $bizConfigFilePath = Configuration::projectDir() . $this->config['config_path'];
+        $bizConfigFilePath = Configuration::projectDir().$this->config['config_path'];
         if (!file_exists($bizConfigFilePath)) {
             throw new ModuleRequireException(
                 __CLASS__,
@@ -78,9 +79,9 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
      * ```
      *
      * @param string $table
-     * @param array $data
+     * @param array  $data
      *
-     * @return integer $id
+     * @return int $id
      */
     public function haveInDatabase($table, array $data)
     {
@@ -93,7 +94,7 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
         $this->assertGreaterThan(
             0,
             $res,
-            'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table
+            'No matching records found for criteria '.json_encode($criteria).' in table '.$table
         );
     }
 
@@ -106,9 +107,9 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
      * ?>
      * ```
      *
-     * @param int $expectedNumber Expected number
-     * @param string $table Table name
-     * @param array $criteria Search criteria [Optional]
+     * @param int    $expectedNumber Expected number
+     * @param string $table          Table name
+     * @param array  $criteria       Search criteria [Optional]
      */
     public function seeNumRecords($expectedNumber, $table, array $criteria = [])
     {
@@ -132,7 +133,7 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
         $this->assertLessThan(
             1,
             $count,
-            'Unexpectedly found matching records for criteria ' . json_encode($criteria) . ' in table ' . $table
+            'Unexpectedly found matching records for criteria '.json_encode($criteria).' in table '.$table
         );
     }
 
@@ -164,17 +165,17 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
      * ```
      *
      * @param string $table
-     * @param array $data
-     * @param array $criteria
+     * @param array  $data
+     * @param array  $criteria
      */
     public function updateInDatabase($table, array $data, array $criteria = [])
     {
         $queryBuilder
             ->update($table)
             ->values($data);
-        
-        $index = 0; 
-        foreach($criteria as $field => $value) {
+
+        $index = 0;
+        foreach ($criteria as $field => $value) {
             $builder->andWhere("{$field} = :{$field}");
             $builder->setParameter(":{$field}", $value);
         }
@@ -195,9 +196,9 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
         $builder = $this->biz['db']->createQueryBuilder()
             ->select($column)
             ->from($table);
-    
-        $index = 0; 
-        foreach($criteria as $field => $value) {
+
+        $index = 0;
+        foreach ($criteria as $field => $value) {
             $builder->andWhere("{$field} = :{$field}");
             $builder->setParameter(":{$field}", $value);
         }
@@ -226,7 +227,6 @@ class BizCodeceptionModule extends CodeceptionModule implements \Codeception\Lib
 
     public function _after(\Codeception\TestInterface $test)
     {
-
         if (isset($this->biz['db'])) {
             $this->biz['db']->rollBack();
         }

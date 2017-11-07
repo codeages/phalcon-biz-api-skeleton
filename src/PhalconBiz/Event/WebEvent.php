@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz\Event;
 
 use Symfony\Component\EventDispatcher\Event;

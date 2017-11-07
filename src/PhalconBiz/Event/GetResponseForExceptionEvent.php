@@ -1,9 +1,8 @@
 <?php
+
 namespace Codeages\PhalconBiz\Event;
 
-use Phalcon\Http\ResponseInterface;
 use Phalcon\Http\RequestInterface;
-
 
 /**
  * Allows to create a response for a thrown exception.

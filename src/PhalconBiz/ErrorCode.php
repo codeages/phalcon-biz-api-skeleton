@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz;
 
 class ErrorCode
@@ -23,7 +24,7 @@ class ErrorCode
 
     /**
      * 请求Credential不正确 (http code: 401)
-     * 
+     *
      * 1. Credential格式不正确
      * 2. Credential签名不正确
      * 3. API对应的AccessKey不存在
