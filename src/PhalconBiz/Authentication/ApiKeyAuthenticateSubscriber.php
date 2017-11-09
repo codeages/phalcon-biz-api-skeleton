@@ -1,11 +1,14 @@
 <?php
-namespace Codeages\PhalconBiz\Authentication;
+namespace Codeages\PhalconBiz\Event;
 
-use Phalcon\Http\RequestInterface;
-use Codeages\PhalconBiz\Authentication\ApiUser;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ApiKeyAuthenticator implements Authenticator
+class AuthenticateSubscriber implements EventSubscriberInterface
 {
+    public function onRequest(GetResponseEvent $event)
+    {
+    }
+
     public function authenticate(RequestInterface $request)
     {
         $token = $request->getHeader('Authorization');
@@ -105,5 +108,12 @@ class ApiKeyAuthenticator implements Authenticator
             return $request->getClientIp();
         }
         throw new \InvalidArgumentException("Request class is not supported.");
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            WebEvents::REQUEST => 'onRequest',
+        ];
     }
 }
