@@ -25,8 +25,8 @@ class CurrentUser implements \ArrayAccess
             throw new \InvalidArgumentException("Key is empty, set current user attribute failed.");
         }
 
-        if (array_key_exists($this->user[$key])) {
-            throw new \InvalidArgumentException("Key is already exist, set current user attribute failed.");
+        if (array_key_exists($key, $this->user)) {
+            throw new \LogicException("Key is already exist, set current user attribute failed.");
         }
 
         $this->user[$key] = $value;
@@ -58,7 +58,7 @@ class CurrentUser implements \ArrayAccess
 
     protected function requireds($user, $keys)
     {
-        foreach ($requireds as $key) {
+        foreach ($keys as $key) {
             if (!array_key_exists($key, $user)) {
                 throw new \InvalidArgumentException("{$key} is missing.");
             }
