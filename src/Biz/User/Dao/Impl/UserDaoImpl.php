@@ -19,6 +19,11 @@ class UserDaoImpl extends GeneralDaoImpl implements UserDao
         return $this->getByFields(['email' => $email]);
     }
 
+    public function getByAccessKey($accessKey)
+    {
+        return $this->getByFields(['access_key' => $accessKey]);
+    }
+
     public function declares()
     {
         return [

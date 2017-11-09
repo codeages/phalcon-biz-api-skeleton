@@ -6,6 +6,8 @@ interface UserService
 {
     public function getUser($id);
 
+    public function getUserByAccessKey($accessKey);
+
     public function countUsers($conditions);
 
     public function searchUsers($conditions, $sorts, $start, $limit);

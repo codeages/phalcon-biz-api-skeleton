@@ -9,4 +9,6 @@ interface UserDao extends GeneralDaoInterface
     public function getByUsername($username);
 
     public function getByEmail($email);
+
+    public function getByAccessKey($accessKey);
 }

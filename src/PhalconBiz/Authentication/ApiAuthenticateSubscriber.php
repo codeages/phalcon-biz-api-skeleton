@@ -6,16 +6,18 @@ use Codeages\PhalconBiz\Event\WebEvents;
 use Codeages\PhalconBiz\Event\GetResponseEvent;
 use Phalcon\Http\RequestInterface;
 use Codeages\PhalconBiz\ErrorCode;
+use Codeages\PhalconBiz\Authentication\UserProvider;
 
 class ApiAuthenticateSubscriber implements EventSubscriberInterface
 {
     public function onRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        $this->authenticate($request);
+        $userProvider = $event->getDi()['user_provider'];
+        $this->authenticate($request, $userProvider);
     }
 
-    public function authenticate(RequestInterface $request)
+    public function authenticate(RequestInterface $request, UserProvider $userProvider)
     {
         $token = $request->getHeader('Authorization');
         if (empty($token)) {
@@ -31,15 +33,15 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
 
         $strategy = strtolower($strategy);
         if ($strategy == 'secret') {
-            return $this->authenticateUseSecret($token);
+            return $this->authenticateUseSecret($token, $request, $userProvider);
         } elseif ($strategy == 'signature') {
-            return $this->authenticateUseSignature($token);
+            return $this->authenticateUseSignature($token, $request, $userProvider);
         } else {
             throw new AuthenticateException("Authorization token is invalid.", ErrorCode::INVALID_CREDENTIAL);
         }
     }
 
-    protected function authenticateUseSecret($token)
+    protected function authenticateUseSecret($token, $request, UserProvider $userProvider)
     {
         $token = explode(':', $token);
         if (count($token) !== 2) {
@@ -47,7 +49,7 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
         }
         list($accessKey, $secretKey) = $token;
 
-        $user = $this->getUser($accessKey);
+        $user = $this->getUser($accessKey, $request, $userProvider);
 
         if ($user['secret_key'] != $secretKey) {
             throw new AuthenticateException("Secret key is invalid.", ErrorCode::INVALID_CREDENTIAL);
@@ -56,7 +58,7 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
         return $user;
     }
 
-    protected function authenticateUseSignature($toekn)
+    protected function authenticateUseSignature($toekn, $request, UserProvider $userProvider)
     {
         $toekn = explode(':', $toekn);
         if (count($toekn) !== 4) {
@@ -64,7 +66,7 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
         }
         list($accessKey, $deadline, $once, $signature) = $token;
 
-        $user = $this->getUser($accessKey);
+        $user = $this->getUser($accessKey, $request, $userProvider);
 
         if ($deadline < $time()) {
             throw new AuthenticateException("Authorization token is expired.", ErrorCode::EXPIRED_CREDENTIAL);
@@ -90,13 +92,14 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
         return $user;
     }
 
-    protected function getUser($accessKey)
+    protected function getUser($accessKey, $request, $userProvider)
     {
-        $user = $this->userProvider->getByApiKey($accessKey);
+        $user = $userProvider->loadUser($accessKey, $request);
         if (empty($user)) {
             throw new AuthenticateException('Key is not exist.', ErrorCode::INVALID_CREDENTIAL);
         }
-        return ApiUser($user);
+
+        return $user;
     }
 
     public function signature($signingText, $secretKey)
@@ -111,16 +114,6 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
         $body = $request->getRawBody();
 
         return "{$uri}\n{$body}";
-    }
-
-    public function getClientIp($request)
-    {
-        if ($request instanceof \Phalcon\Http\Request) {
-            return $request->getClientAddress(true);
-        } elseif ($request instanceof \Symfony\Component\HttpFoundation\Request) {
-            return $request->getClientIp();
-        }
-        throw new \InvalidArgumentException("Request class is not supported.");
     }
 
     public static function getSubscribedEvents()

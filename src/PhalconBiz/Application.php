@@ -58,6 +58,8 @@ class Application
     protected function initializeContainer()
     {
         $di = new Di();
+        $config = $this->config;
+        $biz = $this->biz;
 
         $di->setShared('annotations', function () {
             return new \Phalcon\Annotations\Adapter\Memory();
@@ -88,8 +90,8 @@ class Application
             return new \Phalcon\Http\Response();
         });
 
-        $subscribers = $this->config['subscribers'] ?? [];
-        $di->set('event_dispatcher', function () use ($subscribers) {
+        $subscribers = $config['subscribers'] ?? [];
+        $di->setShared('event_dispatcher', function () use ($subscribers) {
             $dispatcher = new EventDispatcher();
 
             foreach ($subscribers as $subscriber) {
@@ -98,6 +100,17 @@ class Application
 
             return $dispatcher;
         });
+
+        if (isset($config['user_provider'])) {
+            $di->setShared('user_provider', function() use ($config, $biz) {
+                $provider = new $config['user_provider']();
+                if ($provider instanceof BizAwareInterface) {
+                    $provider->setBiz($biz);
+                }
+
+                return $provider;
+            });
+        }
 
         return $di;
     }

@@ -15,6 +15,11 @@ class UserServiceImpl extends BaseService implements UserService
         return $this->getUserDao()->get($id);
     }
 
+    public function getUserByAccessKey($accessKey)
+    {
+        return $this->getUserDao()->getByAccessKey($accessKey);
+    }
+
     public function searchUsers($conditions, $sorts, $start, $limit)
     {
         return $this->getUserDao()->search($conditions, $sorts, $start, $limit);

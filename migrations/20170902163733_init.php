@@ -13,7 +13,8 @@ class Init extends Migration
             CREATE TABLE `user`(
                 `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `username` VARCHAR(32) NOT NULL,
-                `password` VARCHAR(128) NOT NULL,
+                `access_key` VARCHAR(128) NOT NULL,
+                `secret_key` VARCHAR(128) NOT NULL,
                 `is_banned` TINYINT(2) UNSIGNED NOT NULL DEFAULT 0,
                 `created_at` INT(10) UNSIGNED NOT NULL,
                 `updated_at` INT(10) UNSIGNED NOT NULL,
