@@ -17,7 +17,7 @@ class ApiUserTest extends TestCase
         $this->assertFalse($user['expired']);
     }
 
-    public function testNewInstance_WithStatusAttrs()
+    public function testNewInstanceWithStatusAttrs()
     {
         $user = new ApiUser($this->fakeUser([
             'disabled' => 1,
@@ -30,7 +30,7 @@ class ApiUserTest extends TestCase
         $this->assertTrue($user['expired']);
     }
 
-    public function testNewInstance_WithNoExpiredTime()
+    public function testNewInstanceWithNoExpiredTime()
     {
         $user = new ApiUser($this->fakeUser([
             'disabled' => 1,

@@ -3,26 +3,16 @@
 namespace Test\ApiTest;
 
 use Test\ApiTester;
-use Codeception\Util\HttpCode;
+use Codeception\Util\HttpCode;  
 
 class UserCest extends BaseCest
 {
     public function getUserWithExistThenResponseUser(ApiTester $I)
     {
-        $user = [
-            'id' => 1,
-            'username' => 'test',
-            'access_key' => 'test_access_key',
-            'secret_key' => 'test_secret_key',
-            'created_at' => time(),
-            'updated_at' => time(),
-        ];
-        $I->haveInDatabase('user', $user);
-
-        $I->sendGET("/users/{$user['id']}");
+        $I->sendGET("/users/{$this->user['id']}");
 
         $I->seeResponseCodeIs(HttpCode::OK);
-        $I->assertEquals($user['id'], $I->grabDataFromResponseByJsonPath('$.id')[0]);
+        $I->assertEquals($this->user['id'], $I->grabDataFromResponseByJsonPath('$.id')[0]);
         $I->dontSeeResponseJsonMatchesJsonPath('$.password');
     }
 
@@ -45,9 +35,9 @@ class UserCest extends BaseCest
     public function createUser(ApiTester $I)
     {
         $user = [
-            'username' => 'test_username',
-            'access_key' => 'test_access_key',
-            'secret_key' => 'test_secret_key',
+            'username' => 'new_username',
+            'access_key' => 'new_access_key',
+            'secret_key' => 'new_secret_key',
         ];
 
         $I->sendPOST('/users', $user);
@@ -66,17 +56,7 @@ class UserCest extends BaseCest
 
     public function banUser(ApiTester $I)
     {
-        $user = [
-            'id' => 1,
-            'username' => 'test',
-            'access_key' => 'test_access_key',
-            'secret_key' => 'test_secret_key',
-            'created_at' => time(),
-            'updated_at' => time(),
-        ];
-        $I->haveInDatabase('user', $user);
-
-        $I->sendPOST("/users/{$user['id']}/actions/ban");
+        $I->sendPOST("/users/{$this->user['id']}/actions/ban");
         $I->seeResponseCodeIs(HttpCode::OK);
         $I->assertTrue($I->grabDataFromResponseByJsonPath('$.success')[0]);
     }
