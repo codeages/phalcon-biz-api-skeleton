@@ -3,7 +3,7 @@
 namespace Test\ApiTest;
 
 use Test\ApiTester;
-use Codeception\Util\HttpCode;  
+use Codeception\Util\HttpCode;
 
 class UserCest extends BaseCest
 {

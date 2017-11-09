@@ -1,7 +1,6 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Codeages\PhalconBiz\Authentication\CurrentUser;
 use Codeages\PhalconBiz\Authentication\ApiUser;
 
 class ApiUserTest extends TestCase
@@ -22,7 +21,7 @@ class ApiUserTest extends TestCase
         $user = new ApiUser($this->fakeUser([
             'disabled' => 1,
             'locked' => 1,
-            'expired_time' => time() -1,
+            'expired_time' => time() - 1,
         ]));
 
         $this->assertTrue($user['disabled']);

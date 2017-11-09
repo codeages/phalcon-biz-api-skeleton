@@ -103,7 +103,7 @@ class Application
         });
 
         if (isset($config['user_provider'])) {
-            $di->setShared('user_provider', function() use ($config, $biz) {
+            $di->setShared('user_provider', function () use ($config, $biz) {
                 $provider = new $config['user_provider']();
                 if ($provider instanceof BizAwareInterface) {
                     $provider->setBiz($biz);

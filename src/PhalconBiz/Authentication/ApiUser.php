@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeages\PhalconBiz\Authentication;
 
 use Codeages\Biz\Framework\Context\CurrentUser;

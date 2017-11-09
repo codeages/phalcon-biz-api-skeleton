@@ -1,3 +1,5 @@
+# 将此文件重命名为 `.gitlag-ci.yml`，即可启用 Gilab CI。
+
 variables:
   MYSQL_DATABASE: my_api_db_testing
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
