@@ -12,9 +12,9 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
 {
     public function onRequest(GetResponseEvent $event)
     {
-        $request = $event->getRequest();
-        $userProvider = $event->getDi()['user_provider'];
-        $this->authenticate($request, $userProvider);
+        $di = $event->getDI();
+        $user = $this->authenticate($event->getRequest(), $di['user_provider']);
+        $di['user'] = $di['biz']['user'] = $user;
     }
 
     public function authenticate(RequestInterface $request, UserProvider $userProvider)
@@ -58,21 +58,22 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
         return $user;
     }
 
-    protected function authenticateUseSignature($toekn, $request, UserProvider $userProvider)
+    protected function authenticateUseSignature($token, $request, UserProvider $userProvider)
     {
-        $toekn = explode(':', $toekn);
-        if (count($toekn) !== 4) {
+        $token = explode(':', $token);
+        if (count($token) !== 4) {
             throw new AuthenticateException('Authorization token format is invalid.', ErrorCode::INVALID_CREDENTIAL);
         }
         list($accessKey, $deadline, $once, $signature) = $token;
 
         $user = $this->getUser($accessKey, $request, $userProvider);
 
-        if ($deadline < $time()) {
+        if ($deadline < time()) {
             throw new AuthenticateException("Authorization token is expired.", ErrorCode::EXPIRED_CREDENTIAL);
         }
 
-        $signingText = "{$token->once}\n{$token->deadline}\n{$signingText}";
+        $signingText = "{$once}\n{$deadline}\n{$request->getURI()}\n{$request->getRawBody()}";
+
         if ($this->signature($signingText, $user['secret_key']) != $signature) {
             throw new AuthenticateException("Signature is invalid.", ErrorCode::INVALID_CREDENTIAL);
         }
