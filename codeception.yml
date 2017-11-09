@@ -6,7 +6,7 @@ suites:
         modules:
             enabled:
                 # add more modules here
-                - Codeages\PhalconBiz\BizCodeceptionModule
+                - Codeages\Biz\Framework\Testing\BizCodeceptionModule
                 - Asserts
     api:
         path: ApiTest
@@ -15,7 +15,7 @@ suites:
             enabled:
                 - \Test\Helper\Api
                 - Asserts
-                - Codeages\PhalconBiz\BizCodeceptionModule
+                - Codeages\Biz\Framework\Testing\BizCodeceptionModule
                 - REST:
                     url: http://localhost:8000
                     depends: PhpBrowser

@@ -81,7 +81,8 @@ class UserServiceTest extends \Codeception\Test\Unit
         $user = array_merge([
             'id' => 1,
             'username' => 'test',
-            'password' => 'test_password',
+            'access_key' => 'test_access_key',
+            'secret_key' => 'test_secret_key',
             'created_at' => time(),
             'updated_at' => time(),
         ], $user);
@@ -94,11 +95,6 @@ class UserServiceTest extends \Codeception\Test\Unit
     protected function getUserTable()
     {
         return $this->tester->createDao('User:UserDao')->table();
-    }
-
-    protected function getUserDao()
-    {
-        return $this->tester->createDao('User:UserDao');
     }
 
     /**

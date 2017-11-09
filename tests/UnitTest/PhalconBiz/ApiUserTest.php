@@ -10,7 +10,7 @@ class ApiUserTest extends TestCase
     {
         $user = new ApiUser($this->fakeUser());
 
-        $this->assertInstanceOf('\Codeages\PhalconBiz\Authentication\CurrentUser', $user);
+        $this->assertInstanceOf('\Codeages\Biz\Framework\Context\CurrentUser', $user);
 
         $this->assertFalse($user['disabled']);
         $this->assertFalse($user['locked']);

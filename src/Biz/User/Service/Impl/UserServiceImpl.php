@@ -7,6 +7,7 @@ use Biz\User\Service\UserService;
 use Codeages\Biz\Framework\Service\BaseService;
 use Codeages\Biz\Framework\Service\Exception\InvalidArgumentException;
 use Codeages\Biz\Framework\Service\Exception\NotFoundException;
+use Webpatser\Uuid\Uuid;
 
 class UserServiceImpl extends BaseService implements UserService
 {
@@ -34,7 +35,6 @@ class UserServiceImpl extends BaseService implements UserService
     {
         $user = $this->biz['validator']->validate($user, [
             'username' => 'required|string|length_between:3,18',
-            'password' => 'required|string|length_between:3,32',
         ]);
 
         $existUser = $this->getUserDao()->getByUsername($user['username']);
@@ -42,7 +42,8 @@ class UserServiceImpl extends BaseService implements UserService
             throw new InvalidArgumentException('用户名已存在，注册失败！');
         }
 
-        $user['password'] = password_hash($user['password'], PASSWORD_BCRYPT);
+        $user['access_key'] = Uuid::generate(4);
+        $user['secret_key'] = Uuid::generate(4);
 
         return $this->getUserDao()->create($user);
     }
