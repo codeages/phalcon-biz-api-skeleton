@@ -3,7 +3,7 @@
 namespace Test\ApiTest;
 
 use Test\ApiTester;
-use Codeages\PhalconBiz\DbTestHelper;
+use Codeages\Biz\Framework\Testing\DbTestHelper;
 
 abstract class BaseCest
 {
