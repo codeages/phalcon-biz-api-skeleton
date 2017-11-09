@@ -1,0 +1,23 @@
+variables:
+  MYSQL_DATABASE: my_api_db_testing
+  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+before_script:
+  - cp env.php.example env.php
+  - bin/biz env:write env.testing.php DB_NAME my_api_db_testing
+  - bin/biz env:write env.testing.php DB_HOST mysql
+
+cache:
+  key: "$CI_COMMIT_REF_NAME"
+  paths:
+    - vendor
+
+Testing:
+  stage: test
+  tags:
+    - docker-ci-php-7.1
+  services:
+    - mysql:5.5
+  script:
+    - IN_TESTING=true php -S localhost:8000 -t public .htrouter.php &>/dev/null&
+    - bin/codecept run -vvv
