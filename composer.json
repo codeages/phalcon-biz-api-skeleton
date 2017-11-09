@@ -16,8 +16,7 @@
     "require": {
         "php": "^5.5|^7.0",
         "codeages/biz-framework": "^0.9.0",
-        "codeages/plumber": "^0.8.5",
-        "codeages/web-lib": "^0.1.1"
+        "codeages/plumber": "^0.8.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^5|^6",
