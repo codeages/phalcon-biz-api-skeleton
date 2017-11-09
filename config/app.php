@@ -2,7 +2,7 @@
 
 return [
     'subscribers' => [
-        'Codeages\\PhalconBiz\\Event\\AuthenticateSubscriber',
+        'Codeages\\PhalconBiz\\Authentication\\ApiAuthenticateSubscriber',
         'Codeages\\PhalconBiz\\Event\\ExceptionSubscriber',
         'Codeages\\PhalconBiz\\Event\\ResponseSubscriber',
     ],

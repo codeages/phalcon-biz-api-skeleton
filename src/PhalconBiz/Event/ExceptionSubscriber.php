@@ -45,6 +45,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
         $response = $event->getDI()->get('response');
         $response->setStatusCode($statusCode);
+        $response->setContentType('application/json', 'UTF-8');
         $response->setContent(json_encode([
             'error' => $error,
         ]));

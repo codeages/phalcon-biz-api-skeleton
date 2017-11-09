@@ -1,11 +1,11 @@
 <?php
 namespace Codeages\PhalconBiz\Authentication;
 
-interface KeyProvider
+interface UserProvider
 {
     /**
      * @param $id
-     * @return AccessKey
+     * @return CurrentUser
      */
     public function get($id);
 }

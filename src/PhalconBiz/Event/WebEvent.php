@@ -25,4 +25,9 @@ class WebEvent extends Event
     {
         return $this->app;
     }
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
 }
