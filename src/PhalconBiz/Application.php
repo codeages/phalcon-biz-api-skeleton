@@ -14,6 +14,7 @@ use Codeages\PhalconBiz\Event\FilterResponseEvent;
 use Codeages\PhalconBiz\Event\GetResponseForExceptionEvent;
 use Codeages\PhalconBiz\Event\GetResponseForControllerResultEvent;
 use Codeages\PhalconBiz\Event\WebEvents;
+use Codeages\Biz\Framework\Context\BizAwareInterface;
 
 class Application
 {

@@ -3,8 +3,8 @@
 use Codeages\PhalconBiz\Authentication\UserProvider;
 use Codeages\PhalconBiz\Authentication\ApiUser;
 use Phalcon\Http\RequestInterface;
-use Codeages\PhalconBiz\BizAwareInterface;
-use Codeages\PhalconBiz\BizAwareTrait;
+use Codeages\Biz\Framework\Context\BizAwareInterface;
+use Codeages\Biz\Framework\Context\BizAwareTrait;
 
 class ApiUserProvider implements UserProvider, BizAwareInterface
 {

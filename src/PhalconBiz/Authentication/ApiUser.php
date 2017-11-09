@@ -1,7 +1,7 @@
 <?php
 namespace Codeages\PhalconBiz\Authentication;
 
-use Phalcon\Http\RequestInterface;
+use Codeages\Biz\Framework\Context\CurrentUser;
 
 class ApiUser extends CurrentUser
 {
