@@ -1,82 +1,91 @@
 <?php
 
-namespace Biz\User\Service\Impl;
+namespace Biz\Article\Service\Impl;
 
-use Biz\User\Dao\UserDao;
-use Biz\User\Service\UserService;
+use Biz\Article\Dao\ArticleDao;
+use Biz\Article\Service\ArticleService;
 use Codeages\Biz\Framework\Service\BaseService;
-use Codeages\Biz\Framework\Service\Exception\InvalidArgumentException;
 use Codeages\Biz\Framework\Service\Exception\NotFoundException;
-use Webpatser\Uuid\Uuid;
 
-class UserServiceImpl extends BaseService implements UserService
+/**
+ * Example: 文章服务
+ */
+class ArticleServiceImpl extends BaseService implements ArticleService
 {
-    public function getUser($id)
+    public function get($articleId)
     {
-        return $this->getUserDao()->get($id);
+        return $this->getArticleDao()->get($articleId);
     }
 
-    public function getUserByAccessKey($accessKey)
+    public function findLatest($start, $limit)
     {
-        return $this->getUserDao()->getByAccessKey($accessKey);
+        return $this->getArticleDao()->findLatest($start, $limit);
     }
 
-    public function searchUsers($conditions, $sorts, $start, $limit)
+    public function findLatestByUserId($userId, $start, $limit)
     {
-        return $this->getUserDao()->search($conditions, $sorts, $start, $limit);
+        return $this->getArticleDao()->findLatestByUserId($userId, $start, $limit);
     }
 
-    public function countUsers($conditions)
+    public function count($conditions)
     {
-        return $this->getUserDao()->count($conditions);
+        return $this->getArticleDao()->count($conditions);
     }
 
-    public function createUser($user)
+    public function search($conditions, $sorts, $start, $limit)
     {
-        $user = $this->biz['validator']->validate($user, [
-            'username' => 'required|string|length_between:3,18',
+        return $this->getArticleDao()->search($conditions, $sorts, $start, $limit);
+    }
+
+    public function create($article)
+    {
+        $article = $this->biz['validator']->validate($article, [
+            'title' => 'required|string|length_max:256',
+            'content' => 'required|string',
         ]);
 
-        $existUser = $this->getUserDao()->getByUsername($user['username']);
-        if ($existUser) {
-            throw new InvalidArgumentException('用户名已存在，注册失败！');
-        }
+        $article['user_id'] = 1;
 
-        $user['access_key'] = Uuid::generate(4);
-        $user['secret_key'] = Uuid::generate(4);
-
-        return $this->getUserDao()->create($user);
+        return $this->getArticleDao()->create($article);
     }
 
-    public function banUser($id)
+    public function setRecommended($articleId)
     {
-        $user = $this->getUserDao()->get($id);
-        if (empty($user)) {
-            throw new NotFoundException("用户不存在#{$id}，封禁失败。");
+        $article = $this->getArticleDao()->get($articleId);
+        if (empty($article)) {
+            throw new NotFoundException("文章不存在#{$articleId}，设置推荐失败。");
         }
 
-        $this->getUserDao()->update($id, [
-            'is_banned' => 1,
+        $this->getArticleDao()->update($articleId, [
+            'is_recommended' => 1,
         ]);
     }
 
-    public function unbanUser($id)
+    public function cancelRecommended($articleId)
     {
-        $user = $this->getUserDao()->get($id);
-        if (empty($user)) {
-            throw new NotFoundException("用户不存在#{$id}，解禁失败。");
+        $article = $this->getArticleDao()->get($articleId);
+        if (empty($article)) {
+            throw new NotFoundException("文章不存在#{$articleId}，取消推荐失败。");
         }
 
-        $this->getUserDao()->update($id, [
-            'is_banned' => 0,
+        $this->getArticleDao()->update($articleId, [
+            'is_recommended' => 0,
         ]);
+    }
+
+    public function createComment($articleId, $comment)
+    {
+    }
+
+    public function findLatestCommentsByArticleId($articleId, $start, $limit)
+    {
     }
 
     /**
-     * @return \Biz\User\Dao\UserDao
+     * @return \Biz\Article\Dao\ArticleDao
      */
-    protected function getUserDao()
+    protected function getArticleDao()
     {
-        return $this->biz->dao('User:UserDao');
+        return $this->biz->dao('Article:ArticleDao');
     }
 }

@@ -55,18 +55,18 @@ interface ArticleService
     public function create($article);
 
     /**
-     * 收藏一篇文章
+     * 设置为推荐文章
      *
      * @param int $articleId 文章ID
      */
-    public function star($articleId);
+    public function setRecommended($articleId);
 
     /**
-     * 取消收藏一篇文章
+     * 取消推荐文章
      *
      * @param int $articleId 文章ID
      */
-    public function unstar($articleId);
+    public function cancelRecommended($articleId);
 
     /**
      * 对文章发表评论

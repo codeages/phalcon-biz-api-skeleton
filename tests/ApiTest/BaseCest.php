@@ -11,6 +11,11 @@ abstract class BaseCest
 
     protected $user;
 
+    /**
+     * @var Test\ApiTester
+     */
+    protected $I;
+
     public function _before(ApiTester $I)
     {
         $helper = new DbTestHelper($I->biz()['db']);
@@ -28,5 +33,7 @@ abstract class BaseCest
         $this->user = $user;
 
         $I->haveHttpHeader('Authorization', "Secret {$user['access_key']}:{$user['secret_key']}");
+
+        $this->I = $I;
     }
 }

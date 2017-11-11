@@ -1,14 +1,9 @@
 <?php
 
-namespace Biz\User\Dao;
+namespace Biz\Article\Dao;
 
 use Codeages\Biz\Framework\Dao\GeneralDaoInterface;
 
-interface UserDao extends GeneralDaoInterface
+interface ArticleDao extends GeneralDaoInterface
 {
-    public function getByUsername($username);
-
-    public function getByEmail($email);
-
-    public function getByAccessKey($accessKey);
 }

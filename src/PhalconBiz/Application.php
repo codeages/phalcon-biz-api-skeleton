@@ -125,21 +125,7 @@ class Application
             $response = $this->handleException($e, $request);
         }
 
-        if ($response instanceof ResponseInterface) {
-            $response->send();
-
-            return;
-        }
-
-        if (is_array($response)) {
-            $content = $response;
-            $response = $this->di['response'];
-            $response->setStatusCode(200);
-            $response->setContent(json_encode($content));
-            $response->send();
-
-            return;
-        }
+        $response->send();
     }
 
     private function handleException(\Exception $e, $request)

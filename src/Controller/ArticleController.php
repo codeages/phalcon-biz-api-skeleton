@@ -25,10 +25,10 @@ class ArticleController extends Controller
         $sorts = $this->sorts(['created_at' => 'desc']);
 
         $pagination = $this->pagination(
-            $this->getArticleService()->countArticles($conditions)
+            $this->getArticleService()->count($conditions)
         );
 
-        $articles = $this->getArticleService()->searchArticles($conditions, $sorts, $pagination->offset, $pagination->limit);
+        $articles = $this->getArticleService()->search($conditions, $sorts, $pagination->offset, $pagination->limit);
 
         return $this->items($articles, 'Article', $pagination);
     }
@@ -40,7 +40,7 @@ class ArticleController extends Controller
      */
     public function get($articleId)
     {
-        $article = $this->getArticleService()->getArticle($articleId);
+        $article = $this->getArticleService()->get($articleId);
         if (empty($article)) {
             $this->throwNotFoundException('User is not exist.');
         }
@@ -56,7 +56,7 @@ class ArticleController extends Controller
     public function create()
     {
         $article = $this->request->getPost();
-        $article = $this->getArticleService()->createUser($article);
+        $article = $this->getArticleService()->create($article);
 
         return $this->item($article, 'Article');
     }
@@ -71,25 +71,25 @@ class ArticleController extends Controller
     }
 
     /**
-     * 收藏一篇文章
+     * 设置推荐文章
      *
-     * @Post('/{articleId}/actions/star')
+     * @Post('/{articleId}/actions/set_recommended')
      */
-    public function star($articleId)
+    public function setRecommended($articleId)
     {
-        $this->getArticleService()->star($articleId);
+        $this->getArticleService()->setRecommended($articleId);
 
         return $this->success();
     }
 
     /**
-     * 取消收藏一篇文章
+     * 取消推荐文章
      *
-     * @Post('/{articleId}/actions/unstar')
+     * @Post('/{articleId}/actions/cancel_recommended')
      */
-    public function unstar($articleId)
+    public function cancelRecommended($articleId)
     {
-        $this->getArticleService()->unstar($articleId);
+        $this->getArticleService()->cancelRecomended($articleId);
 
         return $this->success();
     }

@@ -4,7 +4,7 @@
 
 ## 特性
 
-* 使用Phalcon作为接口接入层框架，BizFramework作为业务层框架。
+* 使用 Phalcon 作为接口接入层框架，Biz Framework 作为业务层框架。
 * 通过 Composer 初始化项目。
 * 通过注解的方式配置路由。
 * 定义了标准的接口响应格式、通用错误码。
@@ -13,7 +13,7 @@
 * 提供了接口样例代码。
 * 集成[Codeception](http://codeception.com/)的单元测试、接口测试。
 * 集成 Gitlab CI。
-* 集成 APIBlueprint 标准的API文档工具。[TODO]
+* 集成 API Blueprint 标准的API文档工具。[TODO]
 
 ## 安装
 

@@ -1,27 +1,22 @@
 <?php
 
-namespace Biz\User\Dao\Impl;
+namespace Biz\Article\Dao\Impl;
 
-use Biz\User\Dao\UserDao;
+use Biz\Article\Dao\ArticleDao;
 use Codeages\Biz\Framework\Dao\GeneralDaoImpl;
 
-class UserDaoImpl extends GeneralDaoImpl implements UserDao
+class ArticleDaoImpl extends GeneralDaoImpl implements ArticleDao
 {
-    protected $table = 'user';
+    protected $table = 'article';
 
-    public function getByUsername($username)
+    public function findLatest($start, $limit)
     {
-        return $this->getByFields(['username' => $username]);
+        return $this->search([], ['created_at' => 'desc'], $start, $limit);
     }
 
-    public function getByEmail($email)
+    public function findLatestByUserId($userId, $start, $limit)
     {
-        return $this->getByFields(['email' => $email]);
-    }
-
-    public function getByAccessKey($accessKey)
-    {
-        return $this->getByFields(['access_key' => $accessKey]);
+        return $this->search(['user_id' => $userId], ['created_at' => 'desc'], $start, $limit);
     }
 
     public function declares()
@@ -29,6 +24,9 @@ class UserDaoImpl extends GeneralDaoImpl implements UserDao
         return [
             'timestamps' => ['created_at', 'updated_at'],
             'orderbys' => ['created_at', 'updated_at'],
+            'conditions' => [
+                'user_id = :user_id',
+            ],
             'serializes' => [
                 'wechat_tag_ids' => 'delimiter',
                 'nickname' => 'utf8',
