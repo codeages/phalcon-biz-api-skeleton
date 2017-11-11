@@ -44,7 +44,7 @@ class ArticleServiceImpl extends BaseService implements ArticleService
             'content' => 'required|string',
         ]);
 
-        $article['user_id'] = 1;
+        $article['user_id'] = $this->biz['user']['id'];
 
         return $this->getArticleDao()->create($article);
     }

@@ -4,7 +4,7 @@ namespace Test\UnitTest\Biz;
 
 use Codeages\Biz\Framework\Validation\ValidationException;
 
-class ArticleServiceTest extends \Codeception\Test\Unit
+class ArticleServiceTest extends BaseTest
 {
     /**
      * @var \Test\UnitTester
