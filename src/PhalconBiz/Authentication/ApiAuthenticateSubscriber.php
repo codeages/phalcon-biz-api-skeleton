@@ -21,12 +21,12 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
     {
         $token = $request->getHeader('Authorization');
         if (empty($token)) {
-            throw new AuthenticateException('Authorization token is missing.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('Authorization token is missing.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         $token = explode(' ', $token);
         if (2 !== count($token)) {
-            throw new AuthenticateException('Authorization token is invalid.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('Authorization token is invalid.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         list($strategy, $token) = $token;
@@ -37,7 +37,7 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
         } elseif ('signature' == $strategy) {
             return $this->authenticateUseSignature($token, $request, $userProvider);
         } else {
-            throw new AuthenticateException('Authorization token is invalid.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('Authorization token is invalid.', ErrorCode::INVALID_AUTHENTICATION);
         }
     }
 
@@ -45,14 +45,14 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
     {
         $token = explode(':', $token);
         if (2 !== count($token)) {
-            throw new AuthenticateException('Authorization token format is invalid.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('Authorization token format is invalid.', ErrorCode::INVALID_AUTHENTICATION);
         }
         list($accessKey, $secretKey) = $token;
 
         $user = $this->getUser($accessKey, $request, $userProvider);
 
         if ($user['secret_key'] != $secretKey) {
-            throw new AuthenticateException('Secret key is invalid.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('Secret key is invalid.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         return $user;
@@ -62,32 +62,32 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
     {
         $token = explode(':', $token);
         if (4 !== count($token)) {
-            throw new AuthenticateException('Authorization token format is invalid.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('Authorization token format is invalid.', ErrorCode::INVALID_AUTHENTICATION);
         }
         list($accessKey, $deadline, $once, $signature) = $token;
 
         $user = $this->getUser($accessKey, $request, $userProvider);
 
         if ($deadline < time()) {
-            throw new AuthenticateException('Authorization token is expired.', ErrorCode::EXPIRED_CREDENTIAL);
+            throw new AuthenticateException('Authorization token is expired.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         $signingText = "{$once}\n{$deadline}\n{$request->getURI()}\n{$request->getRawBody()}";
 
         if ($this->signature($signingText, $user['secret_key']) != $signature) {
-            throw new AuthenticateException('Signature is invalid.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('Signature is invalid.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         if ($user['locked']) {
-            throw new AuthenticateException('User is locked.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('User is locked.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         if ($user['expired']) {
-            throw new AuthenticateException('User is expired.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('User is expired.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         if ($user['disabled']) {
-            throw new AuthenticateException('User is disabled.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('User is disabled.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         return $user;
@@ -97,7 +97,7 @@ class ApiAuthenticateSubscriber implements EventSubscriberInterface
     {
         $user = $userProvider->loadUser($accessKey, $request);
         if (empty($user)) {
-            throw new AuthenticateException('Key is not exist.', ErrorCode::INVALID_CREDENTIAL);
+            throw new AuthenticateException('Key is not exist.', ErrorCode::INVALID_AUTHENTICATION);
         }
 
         return $user;

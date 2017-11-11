@@ -17,11 +17,12 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $e = $event->getException();
         $debug = $event->getApp()->isDebug();
 
-        if ($e instanceof ServiceException) {
+        // 当抛出 ServiceException 并设置了 code 时，才会将异常具体信息暴露给调用方
+        if ($e instanceof ServiceException && $e->getCode() > 0) {
             $error = ['code' => $e->getCode(), 'message' => $e->getMessage()];
             $statusCode = 400;
         } elseif ($e instanceof NotFoundException || $e instanceof ServiceNotFoundException) {
-            $error = ['code' => ErrorCode::RESOURCE_NOT_FOUND, 'message' => $e->getMessage() ?: 'Resource Not Found.'];
+            $error = ['code' => ErrorCode::NOT_FOUND, 'message' => $e->getMessage() ?: 'Not Found.'];
             $statusCode = 404;
         } elseif ($e instanceof \InvalidArgumentException || $e instanceof ServiceInvalidArgumentException) {
             $error = ['code' => ErrorCode::INVALID_ARGUMENT, 'message' => $e->getMessage()];
