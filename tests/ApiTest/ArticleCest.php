@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\ApiTest;
 
 use Test\ApiTester;
@@ -30,7 +31,7 @@ class ArticleCest extends BaseCest
 
     public function getNotExistArticle(ApiTester $I)
     {
-        $I->sendGET("/articles/9999");
+        $I->sendGET('/articles/9999');
 
         $I->seeResponseCodeIs(HttpCode::NOT_FOUND);
         $I->seeResponseJsonMatchesJsonPath('$.error');
@@ -65,5 +66,4 @@ class ArticleCest extends BaseCest
     {
         return $this->I->createDao('Article:ArticleDao')->table();
     }
-    
 }
