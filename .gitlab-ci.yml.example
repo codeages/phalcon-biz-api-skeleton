@@ -5,10 +5,11 @@ variables:
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
 before_script:
+  - composer config -g repo.packagist composer https://packagist.phpcomposer.com
   - composer install
   - cp env.php.example env.testing.php
-  - bin/biz env:write env.testing.php DB_NAME my_api_db_testing
-  - bin/biz env:write env.testing.php DB_HOST mysql
+  - IN_TESTING=true bin/biz env:write env.testing.php DB_NAME my_api_db_testing
+  - IN_TESTING=true bin/biz env:write env.testing.php DB_HOST mysql
 
 cache:
   key: "$CI_COMMIT_REF_NAME"
