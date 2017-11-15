@@ -30,7 +30,7 @@ class ArticleController extends Controller
 
         $articles = $this->getArticleService()->search($conditions, $sorts, $pagination->offset, $pagination->limit);
 
-        return $this->items($articles, 'Article', $pagination);
+        return $this->items('Article', $articles, $pagination);
     }
 
     /**
@@ -45,7 +45,7 @@ class ArticleController extends Controller
             $this->throwNotFoundException('User is not exist.');
         }
 
-        return $this->item($article, 'Article');
+        return $this->item('Article', $article);
     }
 
     /**
@@ -58,7 +58,7 @@ class ArticleController extends Controller
         $article = $this->request->getPost();
         $article = $this->getArticleService()->create($article);
 
-        return $this->item($article, 'Article');
+        return $this->item('Article', $article);
     }
 
     /**

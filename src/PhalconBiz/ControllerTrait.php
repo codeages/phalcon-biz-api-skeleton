@@ -66,12 +66,12 @@ trait ControllerTrait
     /**
      * 转换单个实体对象
      *
-     * @param array  $item        实体对象
      * @param string $transformer 转换器名称
+     * @param array  $item        实体对象
      *
      * @return array
      */
-    public function item($item, $transformer)
+    public function item($transformer, $item)
     {
         return $this->createTransformType($transformer)->transformItem($item);
     }
@@ -79,13 +79,13 @@ trait ControllerTrait
     /**
      * 转换实体对象集合
      *
-     * @param array[]         $items       实体对象集合
      * @param string          $transformer 转换器名称
+     * @param array[]         $items       实体对象集合
      * @param Pagination|null $pagination  分页对象
      *
      * @return array
      */
-    public function items($items, $transformer, $pagination = null)
+    public function items($transformer, $items, $pagination = null)
     {
         $items = $this->createTransformType($transformer)->transformItems($items);
         if ($pagination) {
