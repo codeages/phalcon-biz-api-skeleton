@@ -5,6 +5,7 @@ variables:
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
 before_script:
+  - composer install
   - cp env.php.example env.testing.php
   - bin/biz env:write env.testing.php DB_NAME my_api_db_testing
   - bin/biz env:write env.testing.php DB_HOST mysql
