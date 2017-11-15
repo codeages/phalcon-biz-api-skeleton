@@ -2,3 +2,4 @@
 /var
 /composer.lock
 /env.php
+/env.testing.php
