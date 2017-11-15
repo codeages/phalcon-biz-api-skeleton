@@ -4,6 +4,7 @@ namespace Test\ApiTest;
 
 use Test\ApiTester;
 use Codeages\Biz\Framework\Testing\DbTestHelper;
+use Codeages\PhalconBiz\Authentication\ApiUser;
 
 abstract class BaseCest
 {
@@ -21,16 +22,14 @@ abstract class BaseCest
         $helper = new DbTestHelper($I->biz()['db']);
         $helper->truncateAllTables();
 
-        $user = [
+        $user = $I->biz()['user'] = new ApiUser([
             'id' => 1,
-            'username' => 'test',
+            'username' => 'testuser',
             'access_key' => 'test_access_key',
             'secret_key' => 'test_secret_key',
-            'created_at' => time(),
-            'updated_at' => time(),
-        ];
-        $I->haveInDatabase('user', $user);
-        $this->user = $user;
+            'login_client' => 'codeception unit tester',
+            'login_ip' => '127.0.0.1',
+        ]);
 
         $I->haveHttpHeader('Authorization', "Secret {$user['access_key']}:{$user['secret_key']}");
 
