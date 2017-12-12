@@ -9,6 +9,7 @@ use Codeages\Biz\Framework\Service\Exception\InvalidArgumentException as Service
 use Codeages\Biz\Framework\Service\Exception\AccessDeniedException as ServiceAccessDeniedException;
 use Codeages\PhalconBiz\ErrorCode;
 use Codeages\PhalconBiz\NotFoundException;
+use Codeages\PhalconBiz\Authentication\AuthenticateException;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -30,6 +31,9 @@ class ExceptionSubscriber implements EventSubscriberInterface
         } elseif ($e instanceof ServiceAccessDeniedException) {
             $error = ['code' => ErrorCode::ACCESS_DENIED, 'message' => $e->getMessage() ?: 'Access denied.'];
             $statusCode = 405;
+        } elseif ($e instanceof AuthenticateException) {
+            $error = ['code' => ErrorCode::INVALID_AUTHENTICATION, 'message' => $e->getMessage() ?: 'Invalid authentication.'];
+            $statusCode = 401;
         } else {
             $error = [
                 'code' => ErrorCode::SERVICE_UNAVAILABLE,
