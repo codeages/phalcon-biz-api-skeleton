@@ -32,7 +32,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $error = ['code' => ErrorCode::ACCESS_DENIED, 'message' => $e->getMessage() ?: 'Access denied.'];
             $statusCode = 405;
         } elseif ($e instanceof AuthenticateException) {
-            $error = ['code' => ErrorCode::INVALID_AUTHENTICATION, 'message' => $e->getMessage() ?: 'Invalid authentication.'];
+            $error = ['code' => $e->getCode() ?: ErrorCode::INVALID_AUTHENTICATION, 'message' => $e->getMessage() ?: 'Invalid authentication.'];
             $statusCode = 401;
         } else {
             $error = [
