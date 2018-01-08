@@ -162,8 +162,13 @@ class Application
 
         $router = $this->di['router'];
 
-        $discovery = new ApiDiscovery($router);
-        $discovery->discovery('Controller', dirname(__DIR__).'/Controller');
+        if (!$this->isDebug()) {
+            $routeCache = new RouteCache($router, $this->biz['cache_directory'], $this->debug);
+            $routeCache->discovery($request->getURI(), $request->getMethod());
+        } else {
+            $discovery = new ApiDiscovery($router);
+            $discovery->discovery('Controller', dirname(__DIR__).'/Controller');
+        }
 
         $router->handle();
 
