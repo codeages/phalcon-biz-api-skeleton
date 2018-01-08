@@ -46,6 +46,7 @@ class ApiDiscovery
             }
 
             $anno = $annotations->get('RoutePrefix');
+
             array_push($this->routePrefixs, $anno->getArgument(0));
             $this->router->addResource($class, $anno->getArgument(0));
         }

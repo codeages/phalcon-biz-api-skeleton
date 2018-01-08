@@ -161,6 +161,7 @@ class Application
         }
 
         $router = $this->di['router'];
+
         if (!$this->isDebug()) {
             $routeCache = new RouteCache($router, $this->biz['cache_directory'], $this->debug);
             $routeCache->discovery($request->getURI(), $request->getMethod());
