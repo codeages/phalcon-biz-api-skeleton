@@ -15,6 +15,9 @@ use Codeages\PhalconBiz\Event\GetResponseForExceptionEvent;
 use Codeages\PhalconBiz\Event\GetResponseForControllerResultEvent;
 use Codeages\PhalconBiz\Event\WebEvents;
 use Codeages\Biz\Framework\Context\BizAwareInterface;
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Application
 {
@@ -32,6 +35,11 @@ class Application
 
     protected $config;
 
+    /**
+     * @var ConfigCache
+     */
+    protected $cache;
+
     public function __construct(Biz $biz, $config = [])
     {
         $this->biz = $biz;
@@ -39,6 +47,8 @@ class Application
         $this->debug = isset($biz['debug']) ? $biz['debug'] : false;
         $this->di = $this->initializeContainer();
         $this->di['biz'] = $biz;
+        $cacheFile = $this->biz['cache_directory'].DIRECTORY_SEPARATOR.'route_map.php';
+        $this->cache = new ConfigCache($cacheFile, $this->isDebug());
     }
 
     /**
@@ -160,33 +170,66 @@ class Application
             return $this->filterResponse($event->getResponse(), $request, $type);
         }
 
-        $router = $this->di['router'];
+        if (!$this->isDebug()) {
+            $routes = $this->getRouterCache();
+            $matchRoute = [];
+            if (isset($routes[$request->getURI()][$request->getMethod()])) {
+                $matchRoute = $routes[$request->getURI()][$request->getMethod()];
+            } else {
+                foreach ($routes as $key => $route) {
+                    if (preg_match($key, $request->getURI())) {
+                        $matchRoute = isset($route[$request->getMethod()]) ? $route[$request->getMethod()] : [];
+                        break;
+                    }
+                }
+            }
 
-        $discovery = new ApiDiscovery($router);
-        $discovery->discovery('Controller', dirname(__DIR__).'/Controller');
+            if (empty($matchRoute)) {
+                throw new NotFoundException();
+            }
+            $dispatcher = $this->di['mvc_dispatcher'];
 
-        $router->handle();
+            $dispatcher->setControllerSuffix('');
+            $dispatcher->setActionSuffix('');
 
-        if (!$router->getMatchedRoute()) {
-            throw new NotFoundException();
+            $dispatcher->setNamespaceName($matchRoute['namespace']);
+            $dispatcher->setControllerName($matchRoute['controller']);
+
+            $dispatcher->setActionName(
+                $matchRoute['action']
+            );
+
+            $dispatcher->setParams(
+                $matchRoute['params'] ?: []
+            );
+        } else {
+            $router = $this->di['router'];
+
+            $discovery = new ApiDiscovery($router);
+            $discovery->discovery('Controller', dirname(__DIR__).'/Controller');
+
+            $router->handle();
+
+            if (!$router->getMatchedRoute()) {
+                throw new NotFoundException();
+            }
+
+            $dispatcher = $this->di['mvc_dispatcher'];
+
+            $dispatcher->setControllerSuffix('');
+            $dispatcher->setActionSuffix('');
+
+            $dispatcher->setNamespaceName($router->getNamespaceName());
+            $dispatcher->setControllerName($router->getControllerName());
+
+            $dispatcher->setActionName(
+                $router->getActionName()
+            );
+
+            $dispatcher->setParams(
+                $router->getParams()
+            );
         }
-
-        $dispatcher = $this->di['mvc_dispatcher'];
-
-        $dispatcher->setControllerSuffix('');
-        $dispatcher->setActionSuffix('');
-
-        $dispatcher->setNamespaceName($router->getNamespaceName());
-        $dispatcher->setControllerName($router->getControllerName());
-
-        $dispatcher->setActionName(
-            $router->getActionName()
-        );
-
-        $dispatcher->setParams(
-            $router->getParams()
-        );
-
         $dispatcher->dispatch();
         $response = $dispatcher->getReturnedValue();
 
@@ -238,5 +281,61 @@ class Application
     private function finishRequest(RequestInterface $request)
     {
         $this->di['event_dispatcher']->dispatch(WebEvents::FINISH_REQUEST, new FinishRequestEvent($this, $request));
+    }
+
+    /**
+     * 获取路由缓存
+     */
+    protected function getRouterCache()
+    {
+        $this->generateRouterCache();
+
+        return require $this->cache->getPath();
+    }
+
+    protected function generateRouterCache()
+    {
+        if ($this->cache->isFresh()) {
+            return;
+        }
+
+        if (!realpath($this->cache->getPath())) {
+            $fs = new Filesystem();
+
+            $fs->touch($this->cache->getPath());
+        }
+
+        $file = new FileResource($this->cache->getPath());
+
+        $routeMap = array();
+
+        $router = $this->di['router'];
+
+        $discovery = new ApiDiscovery($router);
+        $discovery->discovery('Controller', dirname(__DIR__).'/Controller');
+        $routePrefixs = $discovery->getRoutePrefixs();
+
+        foreach($routePrefixs as $routePrefix) {
+            $router->handle($routePrefix);
+            $routes = $router->getRoutes();
+            foreach($routes as $route)
+            {
+                $part = ['pattern' => $route->getPattern()];
+                $paths = $route->getPaths();
+                $part['namespace'] = $paths['namespace'];
+                $part['controller'] = $paths['controller'];
+                $part['action'] = $paths['action'];
+                unset($paths['namespace']);
+                unset($paths['controller']);
+                unset($paths['action']);
+                if (count($paths) > 0) {
+                    $part['params'] = $paths;
+                }
+
+                $routeMap[$route->getCompiledPattern()][$route->getHttpMethods()] = $part;
+            }
+        }
+
+        $this->cache->write(sprintf('<?php return %s;', var_export($routeMap, true)), array($file));
     }
 }

@@ -13,6 +13,8 @@ class ApiDiscovery
      */
     protected $router;
 
+    protected $routePrefixs = [];
+
     public function __construct(AnnotationRouter $router)
     {
         $this->router = $router;
@@ -44,8 +46,13 @@ class ApiDiscovery
             }
 
             $anno = $annotations->get('RoutePrefix');
-
+            array_push($this->routePrefixs, $anno->getArgument(0));
             $this->router->addResource($class, $anno->getArgument(0));
         }
+    }
+
+    public function getRoutePrefixs()
+    {
+        return $this->routePrefixs;
     }
 }
