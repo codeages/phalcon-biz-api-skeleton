@@ -82,7 +82,7 @@ class RouteCache
 
         $file = new FileResource($this->cache->getPath());
 
-        $routeMap = array();
+        $routeMap = [];
 
         $router = $this->router;
 
