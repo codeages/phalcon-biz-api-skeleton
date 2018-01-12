@@ -65,12 +65,14 @@ class ApiDiscovery
         $routerMap = [];
         $finder = new Finder();
         $finder->files()->in($directory)->name('*.php')->sortByName();
+
         $reader = new AnnotationReader([
             "annotationsDir" => $this->cacheDir.'/',
         ]);
 
         foreach ($finder as $file) {
             $class = $namespace.'\\'.$file->getBasename('.php');
+
             if (!class_exists($class)) {
                 continue;
             }
@@ -87,6 +89,7 @@ class ApiDiscovery
             }
 
             $anno = $annotations->get('RoutePrefix');
+
             array_push($routerMap, [
                 'class' => $class,
                 'routePrefix' => $anno->getArgument(0)
