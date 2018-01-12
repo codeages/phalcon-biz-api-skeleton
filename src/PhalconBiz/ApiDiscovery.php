@@ -5,9 +5,6 @@ namespace Codeages\PhalconBiz;
 use Symfony\Component\Finder\Finder;
 use Phalcon\Annotations\Adapter\Files as AnnotationReader;
 use Phalcon\Mvc\Router\Annotations as AnnotationRouter;
-//use Phalcon\Annotations\Adapter\Files;
-use Phalcon\Annotations\Reader;
-use Phalcon\Annotations\Reflection;
 
 class ApiDiscovery
 {
@@ -20,11 +17,14 @@ class ApiDiscovery
 
     protected $cacheDir;
 
+    protected $cachePath;
+
     public function __construct(AnnotationRouter $router, $debug, $cacheDir)
     {
         $this->router = $router;
         $this->debug = $debug;
         $this->cacheDir = $cacheDir;
+        $this->cachePath = $this->cacheDir.DIRECTORY_SEPARATOR.'router_map.php';
     }
 
     public function discovery($namespace, $directory)
@@ -44,21 +44,20 @@ class ApiDiscovery
     {
         $this->generateRouterMapCache($namespace, $directory);
 
-        return require $this->cacheDir.DIRECTORY_SEPARATOR.'router_map.php';
+        return require $this->cachePath;
     }
 
     protected function generateRouterMapCache($namespace, $directory)
     {
-        if (file_exists($this->cacheDir.DIRECTORY_SEPARATOR.'router_map.php')) {
+        if (file_exists($this->cachePath)) {
             return;
         }
 
         $routerMap = $this->getRouterMap($namespace, $directory);
 
-        $path = $this->cacheDir.DIRECTORY_SEPARATOR.'router_map.php';
-		if (file_put_contents($path, "<?php return " . var_export($routerMap, true) . "; ") === false) {
-	  		throw new Exception("Cache directory cannot be written");
-		}
+        if (file_put_contents($this->cachePath, "<?php return " . var_export($routerMap, true) . "; ") === false) {
+            throw new Exception("Cache directory cannot be written");
+        }
     }
 
     protected function getRouterMap($namespace, $directory)
