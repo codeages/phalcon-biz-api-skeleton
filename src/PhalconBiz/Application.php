@@ -62,8 +62,14 @@ class Application
         $config = $this->config;
         $biz = $this->biz;
 
-        $di->setShared('annotations', function () {
-            return new \Phalcon\Annotations\Adapter\Memory();
+        $di->setShared('annotations', function () use ($biz) {
+            if ($biz['debug']) {
+                return new \Phalcon\Annotations\Adapter\Memory();
+            }
+
+            return new \Phalcon\Annotations\Adapter\Files([
+                'annotationsDir' => rtrim($biz['cache_directory'], "\/\\").DIRECTORY_SEPARATOR,
+            ]);
         });
 
         $di->setShared('mvc_dispatcher', function () {
@@ -170,8 +176,8 @@ class Application
 
         $router = $this->di['router'];
 
-        $discovery = new ApiDiscovery($router, $this->debug, $this->biz['cache_directory']);
-        $discovery->discovery('Controller', dirname(__DIR__).'/Controller');
+        $discovery = new AnnotationRouteDiscovery($router, $this->di['annotations'], $this->biz['cache_directory'], $this->debug);
+        $discovery->discover('Controller', dirname(__DIR__).'/Controller');
 
         $router->handle();
 
