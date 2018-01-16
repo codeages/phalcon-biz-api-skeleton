@@ -17,18 +17,35 @@
 
 ## 安装
 
+**从脚手架创建项目**
 ```
 composer create-project codeages/phalcon-biz-api-skeleton my_api_project
 ```
 
 ## 开发
 
+**修改系统环境配置：**
+
+```
+cp env.php.example env.php
+```
+
+修改`env.php`系统环境配置文件，数据库等相关配置。
+
+**创建 var 目录：**
+
+```
+mkdir -p var/{cache,tmp,run,log}; chmod 777 var/{cache,tmp,run,log}
+```
+
 **创建数据库：**
+
 ```shell
 CREATE DATABASE `my_api_db`;
 ```
 
 **执行数据库变更脚本：**
+
 ```shell
 bin/phpmig migrate
 ```
@@ -38,9 +55,17 @@ bin/phpmig migrate
 php -S localhost:8000 -t public .htrouter.php
 ```
 
-也可配置Nginx参见文档的部署部分。
+也可配置 Nginx 参见文档的部署部分。
 
 ## 自动化测试
+
+**创建测试环境配置**
+
+```
+cp env.php.example env.testing.php
+```
+
+修改`env.testing.php`系统环境配置文件，数据库等相关配置。
 
 **启动接口服务：**
 ```bash

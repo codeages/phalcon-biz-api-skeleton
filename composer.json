@@ -1,7 +1,8 @@
 {
     "name": "codeages/phalcon-biz-api-skeleton",
-    "description": "基于 Phalcon、Biz Framework 的 API 项目脚手架。",
     "type": "project",
+    "license": "MIT",
+    "description": "基于 Phalcon、Biz Framework 的 API 项目脚手架。",
     "autoload": {
         "psr-4": {
             "": "src/"
@@ -19,9 +20,6 @@
         "codeception/codeception": "^2.3"
     },
     "scripts": {
-        "post-install-cmd": [
-            "Codeages\\PhalconBiz\\ComposerScriptHandler::buildEnv"
-        ]
     },
     "config" : {
         "bin-dir" : "bin"

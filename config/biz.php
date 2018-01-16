@@ -11,6 +11,7 @@ return [
         'driver' => 'pdo_mysql',
         'charset' => 'utf8',
     ],
-    'log_dir' => dirname(__DIR__).'/var/logs',
+    'log_dir' => dirname(__DIR__).'/var/log',
     'cache_directory' => dirname(__DIR__).'/var/cache',
+    'tmp_directory' => dirname(__DIR__).'/var/tmp',
 ];
