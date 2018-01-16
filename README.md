@@ -44,7 +44,7 @@ php -S localhost:8000 -t public .htrouter.php
 
 **启动接口服务：**
 ```bash
-IN_TESTING=true php -S localhost:8000 -t public .htrouter.php
+IN_TESTING=true php -S localhost:8001 -t public .htrouter.php
 ```
 
 **运行测试：**
