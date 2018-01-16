@@ -95,3 +95,7 @@ server {
     error_log /var/log/nginx/phalcon-biz-api-skeleton.error.log;
 }
 ```
+
+## CHANGELOG
+
+参见 [CHANGELOG.md](CHANGELOG.md)。
