@@ -4,7 +4,7 @@ namespace Codeages\PhalconBiz;
 
 /**
  * 系统通用错误码
- * 
+ *
  * 约定100以内的错误码为系统通用错误码，业务错误码请设置为100以上。
  */
 class ErrorCode
@@ -31,12 +31,12 @@ class ErrorCode
 
     /**
      * 请求验证非法 (http code: 401)
-     * 
+     *
      * 1. 验证信息不存在、格式不正确
      * 2. 验证签名不正确
      * 3. 验证对应的用户不存在
      * 4. 验证信息已过期
-     * 5. 被禁止访问 
+     * 5. 被禁止访问
      */
     const INVALID_AUTHENTICATION = 4;
 
@@ -47,7 +47,7 @@ class ErrorCode
 
     /**
      * 服务暂时下线，请稍后重试 (http code: 503)
-     * 
+     *
      * 1. 升级维护中
      * 2. 过载保护中
      * 3. 内部服务处理超时.

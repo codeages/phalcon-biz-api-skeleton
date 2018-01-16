@@ -126,7 +126,7 @@ class Application
     {
         $request = $this->di['request'];
 
-        if (($request->getMethod() !== 'GET') && 0 === strpos($request->getHeader('Content-Type'), 'application/json')) {
+        if (('GET' !== $request->getMethod()) && 0 === strpos($request->getHeader('Content-Type'), 'application/json')) {
             $data = $request->getJsonRawBody(true) ?: array();
             foreach ($data as $key => $value) {
                 $_POST[$key] = $value;

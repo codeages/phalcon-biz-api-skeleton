@@ -3,9 +3,7 @@
 namespace Codeages\PhalconBiz;
 
 use Symfony\Component\Finder\Finder;
-use Phalcon\Annotations\Adapter\Files as AnnotationReader;
 use Phalcon\Mvc\Router\Annotations as AnnotationRouter;
-
 use Phalcon\Annotations\AdapterInterface;
 
 class AnnotationRouteDiscovery
@@ -20,15 +18,20 @@ class AnnotationRouteDiscovery
      */
     protected $adapter;
 
-    protected $debug = false;
+    protected $debug;
 
     protected $cacheDir;
 
-    public function __construct(AnnotationRouter $router, AdapterInterface $adapter, $cacheDirectory, $debug)
+    public function __construct(AnnotationRouter $router, AdapterInterface $adapter, $cacheDirectory, $debug = true)
     {
         $this->router = $router;
         $this->adapter = $adapter;
+
+        if (!is_dir($cacheDirectory) || !is_writable($cacheDirectory)) {
+            throw new \RuntimeException("Cache directory {$cacheDirectory} is not exist or not writeable.");
+        }
         $this->cacheDirectory = rtrim($cacheDirectory, "\/\\");
+
         $this->debug = $debug;
     }
 
@@ -37,8 +40,6 @@ class AnnotationRouteDiscovery
      *
      * @param string $namespace Controller 的命名空间
      * @param string $directory Controller 的目录
-     * 
-     * @return void
      */
     public function discover($namespace, $directory)
     {
@@ -58,6 +59,7 @@ class AnnotationRouteDiscovery
      *
      * @param string $namespace Controller 的命名空间
      * @param string $directory Controller 的目录
+     *
      * @return array 路由表
      */
     protected function getRoutesFromCache($namespace, $directory)
@@ -70,8 +72,8 @@ class AnnotationRouteDiscovery
 
         $routes = $this->scanRoutes($namespace, $directory);
 
-        if (file_put_contents($cachePath, "<?php return " . var_export($routes, true) . "; ") === false) {
-            throw new Exception("Cache directory cannot be written");
+        if (false === file_put_contents($cachePath, '<?php return '.var_export($routes, true).'; ')) {
+            throw new Exception('Cache directory cannot be written');
         }
 
         return $routes;
@@ -82,6 +84,7 @@ class AnnotationRouteDiscovery
      *
      * @param string $namespace Controller 的命名空间
      * @param string $directory Controller 的目录
+     *
      * @return array 路由表
      */
     protected function scanRoutes($namespace, $directory)
@@ -112,7 +115,7 @@ class AnnotationRouteDiscovery
 
             $routes[] = [
                 'class' => $class,
-                'routePrefix' => $anno->getArgument(0)
+                'routePrefix' => $anno->getArgument(0),
             ];
         }
 

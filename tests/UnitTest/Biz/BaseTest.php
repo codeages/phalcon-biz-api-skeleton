@@ -2,7 +2,6 @@
 
 namespace Test\UnitTest\Biz;
 
-use Codeages\Biz\Framework\Validation\ValidationException;
 use Codeages\PhalconBiz\Authentication\ApiUser;
 
 class BaseTest extends \Codeception\Test\Unit
