@@ -44,8 +44,11 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
         $error['trace_id'] = time().'_'.substr(hash('md5', uniqid('', true)), 0, 10);
 
-        if ($debug) {
-            $error['detail'] = $this->formatExceptionDetail($e);
+        $error['detail'] = $this->formatExceptionDetail($e);
+        $event->getDI()['biz']['logger']->error('exception', $error);
+
+        if (!$debug) {
+            unset($error['detail']);
         }
 
         $response = $event->getDI()->get('response');
