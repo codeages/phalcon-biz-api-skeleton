@@ -119,6 +119,14 @@ class Application
     public function handle()
     {
         $request = $this->di['request'];
+
+        if (($request->getMethod() !== 'GET') && 0 === strpos($request->getHeader('Content-Type'), 'application/json')) {
+            $data = $request->getJsonRawBody(true) ?: array();
+            foreach ($data as $key => $value) {
+                $_POST[$key] = $value;
+            }
+        }
+
         try {
             $response = $this->doHandle();
         } catch (\Exception $e) {
