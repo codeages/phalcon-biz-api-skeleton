@@ -2,7 +2,7 @@
 
 ## [0.4.1] - 2018-01-17
 
-* `config/web.php` 增加 `route_discovery` 配置。从之前版本升级需添加： (thanks to @yili)
+* `config/web.php` 增加 `route_discovery` 配置。从之前版本升级需添加： (thanks to @IlhamTahir)
   ```php
     'route_discovery' => [
         'Controller' => dirname(__DIR__).'/src/Controller'
