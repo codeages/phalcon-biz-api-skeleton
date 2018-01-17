@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "codeages/phalcon-biz-library": "^0.1.0"
+        "codeages/phalcon-biz-library": "^0.1.2"
     },
     "require-dev": {
         "codeception/codeception": "^2.3"

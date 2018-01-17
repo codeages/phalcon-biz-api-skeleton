@@ -1,8 +1,17 @@
 # CHANGELOG
 
+## [0.4.1] - 2018-01-17
+
+* `config/web.php` 增加 `route_discovery` 配置。从之前版本升级需添加： (thanks to @yili)
+  ```php
+    'route_discovery' => [
+        'Controller' => dirname(__DIR__).'/src/Controller'
+    ]
+  ```
+
 ## [0.4.0] - 2018-01-16
 
-* 增加了路由表的 Cache。Thanks to @tangyue
+* 增加了路由表的 Cache。(thanks to @tangyue)
   * 当环境变量`'DEBUG'=> false` 时，会在 `var/cache` 下生产路由表缓存文件，一旦生成，路由就只会读取缓存文件。所以线上每次代码发布后，需执行清除缓存的操作： `rm -rf var/cache/*`。
   * 当环境变量`'DEBUG'=> true` 时，不会生成缓存文件，适用于本地开发。
 * Exception 记录日志。
