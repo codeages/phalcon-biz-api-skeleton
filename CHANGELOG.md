@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.4.2] - 2018-01-24
+
+* 支持 jsonp。
+* 修正错误码。
+
 ## [0.4.1] - 2018-01-17
 
 * `config/web.php` 增加 `route_discovery` 配置。从之前版本升级需添加： (thanks to @IlhamTahir)
