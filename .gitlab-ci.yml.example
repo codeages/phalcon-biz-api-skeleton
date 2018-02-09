@@ -23,5 +23,5 @@ Testing:
   services:
     - mysql:5.5
   script:
-    - IN_TESTING=true php -S localhost:8000 -t public .htrouter.php &>/dev/null&
+    - IN_TESTING=true php -S localhost:8001 -t public .htrouter.php &>/dev/null&
     - bin/codecept run -vvv
