@@ -17,7 +17,7 @@ suites:
                 - Asserts
                 - Codeages\Biz\Framework\Testing\BizCodeceptionModule
                 - REST:
-                    url: http://localhost:8000
+                    url: http://localhost:8001
                     depends: PhpBrowser
                     part: Json
 settings:
