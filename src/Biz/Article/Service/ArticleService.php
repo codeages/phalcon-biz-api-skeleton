@@ -1,6 +1,6 @@
 <?php
 
-namespace Biz\Article\Service;
+namespace App\Biz\Article\Service;
 
 interface ArticleService
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Biz\Article\Service\Impl;
+namespace App\Biz\Article\Service\Impl;
 
-use Biz\Article\Dao\ArticleDao;
-use Biz\Article\Service\ArticleService;
+use App\Biz\Article\Dao\ArticleDao;
+use App\Biz\Article\Service\ArticleService;
 use Codeages\Biz\Framework\Service\BaseService;
 use Codeages\Biz\Framework\Service\Exception\NotFoundException;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\ApiTest;
+namespace App\Tests\ApiTest;
 
 use Test\ApiTester;
 use Codeages\Biz\Framework\Testing\DbTestHelper;

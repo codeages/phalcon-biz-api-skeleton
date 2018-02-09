@@ -5,12 +5,12 @@
     "description": "基于 Phalcon、Biz Framework 的 API 项目脚手架。",
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "App\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Test\\": "tests/"
+            "App\\Tests\\": "tests/"
         }
     },
     "require": {

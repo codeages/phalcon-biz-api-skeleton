@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\UnitTest\Biz;
+namespace App\Tests\UnitTest\Biz;
 
 use Codeages\PhalconBiz\Authentication\ApiUser;
 

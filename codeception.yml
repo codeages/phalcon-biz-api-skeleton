@@ -5,9 +5,12 @@ suites:
         actor: UnitTester
         modules:
             enabled:
-                # add more modules here
                 - Codeages\Biz\Framework\Testing\BizCodeceptionModule
                 - Asserts
+            config:
+                Codeages\Biz\Framework\Testing\BizCodeceptionModule:
+                    class: App\Biz\AppBiz
+
     api:
         path: ApiTest
         actor: ApiTester
@@ -20,6 +23,9 @@ suites:
                     url: http://localhost:8001
                     depends: PhpBrowser
                     part: Json
+            config:
+                Codeages\Biz\Framework\Testing\BizCodeceptionModule:
+                    class: App\Biz\AppBiz
 settings:
     bootstrap: _bootstrap.php
     shuffle: true

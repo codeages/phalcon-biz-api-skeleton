@@ -1,6 +1,6 @@
 <?php
 
-namespace Controller\TransformType;
+namespace App\Controller\TransformType;
 
 class ArticleType extends \Codeages\PhalconBiz\AbstractTransformType
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Biz;
+namespace App\Biz;
 
 use Codeages\Biz\Framework\Context\Biz;
 use Codeages\Biz\Framework\Provider\MonologServiceProvider;
@@ -13,6 +13,7 @@ class AppBiz extends Biz
     {
         parent::__construct($values);
 
+        $this['autoload.aliases'][''] = 'App\Biz';
         $this['migration.directories'][] = dirname(dirname(__DIR__)).'/migrations';
         $this->register(new DoctrineServiceProvider());
         $this->register(new MonologServiceProvider(), [

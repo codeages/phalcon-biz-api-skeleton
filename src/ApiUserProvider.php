@@ -1,4 +1,5 @@
 <?php
+namespace App;
 
 use Codeages\PhalconBiz\Authentication\UserProvider;
 use Codeages\PhalconBiz\Authentication\ApiUser;

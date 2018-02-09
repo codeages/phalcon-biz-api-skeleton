@@ -1,8 +1,8 @@
 <?php
 
-namespace Biz\Article\Dao\Impl;
+namespace App\Biz\Article\Dao\Impl;
 
-use Biz\Article\Dao\ArticleDao;
+use App\Biz\Article\Dao\ArticleDao;
 use Codeages\Biz\Framework\Dao\GeneralDaoImpl;
 
 class ArticleDaoImpl extends GeneralDaoImpl implements ArticleDao

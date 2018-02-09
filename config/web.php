@@ -7,8 +7,8 @@ return [
         'Codeages\\PhalconBiz\\Event\\ResponseSubscriber',
     ],
 
-    'user_provider' => 'ApiUserProvider',
+    'user_provider' => 'App\\ApiUserProvider',
     'route_discovery' => [
-        'Controller' => dirname(__DIR__).'/src/Controller'
+        'App\\Controller' => dirname(__DIR__).'/src/Controller'
     ]
 ];

@@ -19,7 +19,7 @@ if (env('DEBUG', false)) {
 
 $config = require ROOT_DIR.'/config/biz.php';
 
-$biz = new \Biz\AppBiz($config);
+$biz = new \App\Biz\AppBiz($config);
 $biz->boot();
 
 return $biz;

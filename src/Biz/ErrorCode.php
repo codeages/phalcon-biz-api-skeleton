@@ -1,6 +1,6 @@
 <?php
 
-namespace Biz;
+namespace App\Biz;
 
 /**
  * 业务错误码

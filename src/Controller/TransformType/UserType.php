@@ -1,6 +1,6 @@
 <?php
 
-namespace Controller\TransformType;
+namespace App\Controller\TransformType;
 
 class UserType extends \Codeages\PhalconBiz\AbstractTransformType
 {
