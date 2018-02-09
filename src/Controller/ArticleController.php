@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use Phalcon\Mvc\Controller;
 use Codeages\PhalconBiz\ControllerTrait;
+use Phalcon\Mvc\Controller;
 
 /**
  * 例子：文章API

@@ -2,8 +2,8 @@
 
 namespace App\Tests\ApiTest;
 
-use Test\ApiTester;
 use Codeception\Util\HttpCode;
+use Test\ApiTester;
 
 class ArticleCest extends BaseCest
 {

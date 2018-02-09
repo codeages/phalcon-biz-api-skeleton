@@ -3,3 +3,4 @@
 /composer.lock
 /env.php
 /env.testing.php
+.php_cs.cache

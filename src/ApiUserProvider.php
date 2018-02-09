@@ -1,11 +1,12 @@
 <?php
+
 namespace App;
 
-use Codeages\PhalconBiz\Authentication\UserProvider;
-use Codeages\PhalconBiz\Authentication\ApiUser;
-use Phalcon\Http\RequestInterface;
 use Codeages\Biz\Framework\Context\BizAwareInterface;
 use Codeages\Biz\Framework\Context\BizAwareTrait;
+use Codeages\PhalconBiz\Authentication\ApiUser;
+use Codeages\PhalconBiz\Authentication\UserProvider;
+use Phalcon\Http\RequestInterface;
 
 class ApiUserProvider implements UserProvider, BizAwareInterface
 {

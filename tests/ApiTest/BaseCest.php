@@ -2,9 +2,9 @@
 
 namespace App\Tests\ApiTest;
 
-use Test\ApiTester;
 use Codeages\Biz\Framework\Testing\DbTestHelper;
 use Codeages\PhalconBiz\Authentication\ApiUser;
+use Test\ApiTester;
 
 abstract class BaseCest
 {

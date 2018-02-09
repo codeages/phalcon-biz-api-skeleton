@@ -3,8 +3,8 @@
 namespace App\Biz;
 
 use Codeages\Biz\Framework\Context\Biz;
-use Codeages\Biz\Framework\Provider\MonologServiceProvider;
 use Codeages\Biz\Framework\Provider\DoctrineServiceProvider;
+use Codeages\Biz\Framework\Provider\MonologServiceProvider;
 use Codeages\Biz\Framework\Validation\SimpleValidator;
 
 class AppBiz extends Biz

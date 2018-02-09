@@ -9,6 +9,6 @@ return [
 
     'user_provider' => 'App\\ApiUserProvider',
     'route_discovery' => [
-        'App\\Controller' => dirname(__DIR__).'/src/Controller'
-    ]
+        'App\\Controller' => dirname(__DIR__).'/src/Controller',
+    ],
 ];

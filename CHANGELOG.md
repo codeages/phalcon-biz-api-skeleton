@@ -3,6 +3,8 @@
 ## [0.5.0] - 2018-02-09
 
 * src 目录的命名空间调整为 `App\\`，tests 目录的命名空间调整为 `App\\Tests`，向 Symfony4 看齐。
+* bootstrap 目录下文件重命名，去除 `bootstrap_` 前缀。
+* php-cs-fixer 新增两条规则。
 
 ## [0.4.2] - 2018-01-24
 
