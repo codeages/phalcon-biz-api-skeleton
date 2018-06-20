@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.5.1] - 2018-06-20
+
+* 集成 `particle/validator`。
+
 ## [0.5.0] - 2018-02-09
 
 * src 目录的命名空间调整为 `App\\`，tests 目录的命名空间调整为 `App\\Tests`，向 Symfony4 看齐。
