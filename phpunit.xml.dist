@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/7.1/phpunit.xsd"
+         colors="true"
+         bootstrap="bootstrap/phpunit.php"
+>
+    <php>
+        <ini name="error_reporting" value="-1" />
+    </php>
+
+    <testsuites>
+        <testsuite name="Unit Test Suite">
+            <directory>./tests/Biz</directory>
+        </testsuite>
+        <testsuite name="Api Test Suite">
+            <directory>./tests/Api</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./src/</directory>
+            <exclude>
+                <directory>./src/Controller</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
