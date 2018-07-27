@@ -11,7 +11,6 @@
 * 集成了接口鉴权机制。
 * 集成频率控制。[TODO]
 * 提供了接口样例代码。
-* 集成[Codeception](http://codeception.com/)的单元测试、接口测试。
 * 集成 Gitlab CI。
 * 集成 API Blueprint 标准的API文档工具。[TODO]
 
@@ -67,16 +66,10 @@ cp env.php.example env.testing.php
 
 修改`env.testing.php`系统环境配置文件，数据库等相关配置。
 
-**启动接口服务：**
-```bash
-IN_TESTING=true php -S localhost:8001 -t public .htrouter.php
-```
-
 **运行测试：**
+
 ```
-bin/codecept run # 运行所有测试
-bin/codecept run unit # 只运行单元测试
-bin/codecept run api # 只运行接口测试
+phpunit
 ```
 
 ## 部署
