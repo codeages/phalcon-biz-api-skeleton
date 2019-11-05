@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "codeages/phalcon-biz-library": "^1.0"
+        "codeages/phalcon-biz-library": "^1.0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^6 || ^7 || ^8"
