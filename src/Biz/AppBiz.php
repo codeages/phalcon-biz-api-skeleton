@@ -5,7 +5,7 @@ namespace App\Biz;
 use Codeages\Biz\Framework\Context\Biz;
 use Codeages\Biz\Framework\Provider\DoctrineServiceProvider;
 use Codeages\Biz\Framework\Provider\MonologServiceProvider;
-use Codeages\Biz\Framework\Validation\SimpleValidator;
+use Codeages\Biz\Framework\Validator\Validator;
 
 class AppBiz extends Biz
 {
@@ -21,7 +21,7 @@ class AppBiz extends Biz
         ]);
 
         $this['validator'] = $this->factory(function () {
-            return new SimpleValidator();
+            return new Validator();
         });
     }
 }

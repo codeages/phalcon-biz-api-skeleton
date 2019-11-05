@@ -40,8 +40,8 @@ class ArticleServiceImpl extends BaseService implements ArticleService
     public function create($article)
     {
         $article = $this->biz['validator']->validate($article, [
-            'title' => 'required|string|length_max:256',
-            'content' => 'required|string',
+            'title' => ['required', ['lengthMax', 256]],
+            'content' => ['required'],
         ]);
 
         $article['user_id'] = $this->biz['user']['id'];

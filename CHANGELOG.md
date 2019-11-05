@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.6.0] - 2019-11-05
+
+* 集成 `vlucas/valitron` 。
+* 去除 `particle/validator` 。
+
 ## [0.5.1] - 2018-06-20
 
 * 集成 `particle/validator`。
