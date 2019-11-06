@@ -15,12 +15,12 @@ class ArticleServiceTest extends BaseTest
 
     protected function getArticleService()
     {
-        return $this->biz->service('Article:ArticleService');
+        return $this->biz->service('ArticleService');
     }
 
     protected function getArticleDao()
     {
-        return $this->biz->dao('Article:ArticleDao');
+        return $this->biz->dao('ArticleDao');
     }
 
 }

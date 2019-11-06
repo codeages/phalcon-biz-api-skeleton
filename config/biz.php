@@ -14,4 +14,7 @@ return [
     'log_dir' => dirname(__DIR__).'/var/log',
     'cache_directory' => dirname(__DIR__).'/var/cache',
     'tmp_directory' => dirname(__DIR__).'/var/tmp',
+    'jsonrpc_endpoints' => [
+        'example' => 'http://localhost/phalcon-biz-api-skeleton/public/jsonrpc.php',
+    ]
 ];

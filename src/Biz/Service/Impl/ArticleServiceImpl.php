@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Biz\Article\Service\Impl;
+namespace App\Biz\Service\Impl;
 
-use App\Biz\Article\Dao\ArticleDao;
-use App\Biz\Article\Service\ArticleService;
+use App\Biz\Dao\ArticleDao;
+use App\Biz\Service\ArticleService;
 use Codeages\Biz\Framework\Service\BaseService;
 use Codeages\Biz\Framework\Service\Exception\NotFoundException;
+use Codeages\Biz\Framework\Service\Exception\ServiceException;
 
 /**
  * Example: 文章服务
@@ -86,6 +87,6 @@ class ArticleServiceImpl extends BaseService implements ArticleService
      */
     protected function getArticleDao()
     {
-        return $this->biz->dao('Article:ArticleDao');
+        return $this->biz->dao('ArticleDao');
     }
 }

@@ -6,6 +6,7 @@ use Codeages\Biz\Framework\Context\Biz;
 use Codeages\Biz\Framework\Provider\DoctrineServiceProvider;
 use Codeages\Biz\Framework\Provider\MonologServiceProvider;
 use Codeages\Biz\Framework\Validator\Validator;
+use Codeages\PhalconBiz\JsonRpcClient\JsonRpcClient;
 
 class AppBiz extends Biz
 {
@@ -23,5 +24,9 @@ class AppBiz extends Biz
         $this['validator'] = $this->factory(function () {
             return new Validator();
         });
+
+        $this['rpc'] = function() {
+            return new JsonRpcClient();
+        };
     }
 }

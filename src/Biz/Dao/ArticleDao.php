@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Biz\Article\Dao;
+namespace App\Biz\Dao;
 
 use Codeages\Biz\Framework\Dao\GeneralDaoInterface;
 
