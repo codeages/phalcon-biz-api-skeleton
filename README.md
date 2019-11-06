@@ -9,16 +9,15 @@
 * 通过注解的方式配置路由。
 * 定义了标准的接口响应格式、通用错误码。
 * 集成了接口鉴权机制。
-* 集成频率控制。[TODO]
 * 提供了接口样例代码。
 * 集成 Gitlab CI。
-* 集成 API Blueprint 标准的API文档工具。[TODO]
+* 集成频率控制。[TODO]
 
 ## 安装
 
 **从脚手架创建项目**
 ```
-composer create-project codeages/phalcon-biz-api-skeleton my_api_project
+composer create-project codeages/phalcon-biz-api-skeleton api-example
 ```
 
 ## 开发
@@ -74,43 +73,36 @@ phpunit
 
 ## 部署
 
-```
+```nginx
 server {
     listen        80;
-    server_name   phalcon-biz-api-skeleton.local.cg-dev.cn;
+    server_name   api-example.local.cg-dev.cn;
+    root /var/www/api-example/public;
 
-    root /var/www/phalcon-biz-api-skeleton/public;
-    index index.php index.html index.htm;
-
-    charset utf-8;
+    location = /jsonrpc {
+        try_files $uri /jsonrpc.php$is_args$args;
+    }
 
     location / {
-        try_files $uri $uri/ /index.php?_url=$uri&$args;
+        try_files $uri /index.php?_url=$uri&$args;
+    }
+
+    location ~ ^/(index|jsonrpc)\.php(/|$) {
+        fastcgi_pass  127.0.0.1:9000;
+        # fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        fastcgi_split_path_info       ^(.+\.php)(/.+)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        internal;
     }
 
     location ~ \.php$ {
-        try_files $uri =404;
-        fastcgi_pass  127.0.0.1:9000;
-        fastcgi_index /index.php;
-        include fastcgi_params;
-        fastcgi_split_path_info       ^(.+\.php)(/.+)$;
-        fastcgi_param PATH_INFO       $fastcgi_path_info;
-        fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        return 404;
     }
 
-    location ~ /\.ht {
-        deny all;
-    }
-
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-        expires       max;
-        log_not_found off;
-        access_log    off;
-    }
-
-    access_log /var/log/nginx/phalcon-biz-api-skeleton.access.log;
-    error_log /var/log/nginx/phalcon-biz-api-skeleton.error.log;
+    access_log /var/log/nginx/api-example.access.log;
+    error_log /var/log/nginx/api-example.error.log;
 }
 ```
 

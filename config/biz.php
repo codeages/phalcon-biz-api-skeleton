@@ -3,7 +3,7 @@
 return [
     'debug' => env('DEBUG', false),
     'db.options' => [
-        'dbname' => env('DB_NAME', 'app-store'),
+        'dbname' => env('DB_NAME', 'example_db'),
         'user' => env('DB_USER', 'root'),
         'password' => env('DB_PASSWORD', ''),
         'host' => env('DB_HOST', '127.0.0.1'),
