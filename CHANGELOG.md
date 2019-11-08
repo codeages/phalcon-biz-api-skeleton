@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.7.0] - 2019-11-09
+
+* 集成 `codeages/plumber2` 。
+
 ## [0.6.0] - 2019-11-05
 
 * 集成 `vlucas/valitron` 。
