@@ -33,8 +33,11 @@ class BizJsonRpcEvaluator implements \Datto\JsonRpc\Evaluator
 
     public function evaluate($method, $arguments)
     {
-        list($serviceId, $method) = explode('.', $method);
+        if (strpos($method, '.') === false) {
+            throw new \Datto\JsonRpc\Exceptions\MethodException();
+        }
 
+        list($serviceId, $method) = explode('.', $method);
         try {
             $service = $this->biz->service($serviceId);
         } catch (\Exception $e) {

@@ -78,7 +78,7 @@ server {
     listen        80;
     server_name   api-example.local.cg-dev.cn;
     root /var/www/api-example/public;
-
+    
     location = /jsonrpc {
         try_files $uri /jsonrpc.php$is_args$args;
     }
