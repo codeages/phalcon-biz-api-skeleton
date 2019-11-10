@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Application;
+
+$biz = require __DIR__ . '/../bootstrap/console.php';
+
+use App\Command\ExampleCommand;
+
+$application = new Application();
+
+$application->add(new ExampleCommand($biz));
+$application->run();

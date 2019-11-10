@@ -5,5 +5,5 @@
 /env.testing.php
 .php_cs.cache
 .idea/
-/bin
+/bin/*
 !/bin/console
