@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.8.0] - 2019-11-10
+
+* 集成 `symfony/console`。
+
 ## [0.7.0] - 2019-11-09
 
 * 集成 `codeages/plumber2` 。
