@@ -40,6 +40,18 @@ class JsonRpcServerHandler implements Evaluator
 
     private function auth()
     {
+        $allowedIps = env('JSONRPC_ALLOWED_IPS');
+        $allowedIps  = str_replace(' ', '', $allowedIps);
+        $allowedIps = !$allowedIps ? [] : explode(',', $allowedIps);
+
+        if (empty($allowedIps)) {
+            throw new InvalidRequestException("Access denied (Server is not set JSONRPC_ALLOWED_IPS env variate).");
+        }
+
+        if (!in_array($_SERVER['REMOTE_ADDR'], $allowedIps)) {
+            throw new InvalidRequestException("Access denied (your ip is not allowed).");
+        }
+
         if (empty($_SERVER['HTTP_AUTHORIZATION'])) {
             throw new InvalidRequestException('Access denied (authorization credentials is missing).');
         }
