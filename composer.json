@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "codeages/phalcon-biz-library": "^1.0.6",
+        "codeages/phalcon-biz-library": "^1.0.8",
         "datto/json-rpc-http": "^5.0",
         "codeages/plumber2": "^0.4.6"
     },

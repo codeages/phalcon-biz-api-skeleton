@@ -67,7 +67,7 @@ class JsonRpcServerHandler implements Evaluator
             $context->setUserId(isset($parsed['user_id']) ? $parsed['user_id'] : null);
             $context->setUsername(isset($parsed['username']) ? $parsed['username'] : null);
             $context->setIp(isset($parsed['ip']) ? $parsed['ip'] : null);
-            $context->setTraceId(isset($_GET['trace_id']) ? isset($_GET['trace_id']) : null);
+            $context->setTraceId(isset($parsed['ip']) ? $parsed['ip'] : null);
         }
 
         $this->biz['service_context'] = $context;
