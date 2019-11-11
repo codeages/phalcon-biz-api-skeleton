@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.9.0] - 2019-11-11
+
+* 集成 JSONRPC。
+
 ## [0.8.0] - 2019-11-10
 
 * 集成 `symfony/console`。
