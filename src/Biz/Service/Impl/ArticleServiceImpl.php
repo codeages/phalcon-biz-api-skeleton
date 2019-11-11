@@ -83,7 +83,7 @@ class ArticleServiceImpl extends BaseService implements ArticleService
     }
 
     /**
-     * @return \Biz\Article\Dao\ArticleDao
+     * @return ArticleDao
      */
     protected function getArticleDao()
     {
