@@ -6,19 +6,19 @@ require dirname(__DIR__).'/vendor/autoload.php';
 
 $biz = require ROOT_DIR.'/bootstrap/biz.php';
 
-class ArticleService
+$context = new \App\Biz\ServiceContext();
+
+$context->setUserId(1);
+$context->setUsername('test_user');
+$context->setIp('127.0.0.1');
+$context->setTraceId('test_trace_id');
+
+$biz['service_context'] = $context;
+
+
+class ArticleService extends \App\Biz\Service\BaseJsonRpcService
 {
-    use Codeages\PhalconBiz\JsonRpcClient\JsonRpcClientTrait;
-
-    protected $endpoint;
-
-    protected $biz;
-
-    public function __construct($biz)
-    {
-        $this->biz = $biz;
-        $this->endpoint = getenv('JSONRPC_EXAMPLE');
-    }
+    protected $endpoint = 'example';
 
     public function create($article)
     {

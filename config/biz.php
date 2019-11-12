@@ -15,6 +15,13 @@ return [
     'cache_directory' => dirname(__DIR__).'/var/cache',
     'tmp_directory' => dirname(__DIR__).'/var/tmp',
     'jsonrpc_endpoints' => [
-        'example' => 'http://localhost/phalcon-biz-api-skeleton/public/jsonrpc.php',
+        'example' => [
+            'addr' => env('JSONRPC_EXAMPLE_ADDR'),
+            'auth_type' => 'basic',
+            'auth_credentials' => [
+                'username' => env('JSONRPC_EXAMPLE_USERNAME'),
+                'password' => env('JSONRPC_EXAMPLE_PASSWORD'),
+            ]
+        ],
     ]
 ];

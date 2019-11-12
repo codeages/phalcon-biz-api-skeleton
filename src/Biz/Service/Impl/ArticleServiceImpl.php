@@ -45,7 +45,7 @@ class ArticleServiceImpl extends BaseService implements ArticleService
             'content' => ['required'],
         ]);
 
-        $article['user_id'] = $this->biz['user']['id'];
+        $article['user_id'] = $this->biz['service_context']->getUserId();
 
         return $this->getArticleDao()->create($article);
     }
@@ -83,7 +83,7 @@ class ArticleServiceImpl extends BaseService implements ArticleService
     }
 
     /**
-     * @return \Biz\Article\Dao\ArticleDao
+     * @return ArticleDao
      */
     protected function getArticleDao()
     {
