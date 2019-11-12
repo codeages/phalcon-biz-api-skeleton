@@ -4,13 +4,15 @@
 
 ## 特性
 
-* 使用 Phalcon 作为接口接入层框架，Biz Framework 作为业务层框架。
-* 通过 Composer 初始化项目。
-* 通过注解的方式配置路由。
-* 定义了标准的接口响应格式、通用错误码。
-* 集成了接口鉴权机制。
-* 提供了接口样例代码。
-* 集成 Gitlab CI。
+* 使用 Phalcon 作为接口接入层框架，Biz Framework 作为业务层框架；
+* 通过 Composer 初始化项目；
+* 通过注解的方式配置路由；
+* 定义了标准的接口响应格式、通用错误码；
+* 集成了接口鉴权机制；
+* 提供了接口样例代码；
+* 集成 Gitlab CI 配置；
+* 集成了 Plumber2 消息队列消费者进程；
+* 集成了 Console；
 * 集成频率控制。[TODO]
 
 ## 安装
@@ -28,18 +30,19 @@ composer create-project codeages/phalcon-biz-api-skeleton api-example
 cp env.php.example env.php
 ```
 
-修改`env.php`系统环境配置文件，数据库等相关配置。
+修改`env.php`系统环境配置文件，数据库等相关配置。开发环境下请配置 `debug` 配置为 `true`，否则将无法显示程序错误信息。
 
 **创建 var 目录：**
 
 ```
-mkdir -p var/{cache,tmp,run,log}; chmod 777 var/{cache,tmp,run,log}
+mkdir -p var/{cache,tmp,run,log}
+chmod 777 var/{cache,tmp,run,log}
 ```
 
 **创建数据库：**
 
 ```shell
-CREATE DATABASE `my_api_db`;
+CREATE DATABASE `api_example`;
 ```
 
 **执行数据库变更脚本：**
@@ -48,35 +51,12 @@ CREATE DATABASE `my_api_db`;
 bin/phpmig migrate
 ```
 
-**启动接口服务：**
-```shell
-php -S localhost:8000 -t public .htrouter.php
-```
-
-也可配置 Nginx 参见文档的部署部分。
-
-## 自动化测试
-
-**创建测试环境配置**
-
-```
-cp env.php.example env.testing.php
-```
-
-修改`env.testing.php`系统环境配置文件，数据库等相关配置。
-
-**运行测试：**
-
-```
-phpunit
-```
-
-## 部署
+**配置 Nginx：**
 
 ```nginx
 server {
     listen        80;
-    server_name   api-example.local.cg-dev.cn;
+    server_name   api-example.local;
     root /var/www/api-example/public;
     
     location = /jsonrpc {
@@ -104,6 +84,22 @@ server {
     access_log /var/log/nginx/api-example.access.log;
     error_log /var/log/nginx/api-example.error.log;
 }
+```
+
+## 自动化测试
+
+**创建测试环境配置**
+
+```
+cp env.php.example env.testing.php
+```
+
+修改`env.testing.php`系统环境配置文件，数据库等相关配置。
+
+**运行测试：**
+
+```
+phpunit
 ```
 
 ## CHANGELOG
