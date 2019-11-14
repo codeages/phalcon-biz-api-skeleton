@@ -53,16 +53,14 @@ bin/phpmig migrate
 
 **配置 Nginx：**
 
+
+对外服务API:
 ```nginx
 server {
     listen        80;
     server_name   api-example.local;
     root /var/www/api-example/public;
     
-    location = /jsonrpc {
-        try_files $uri /jsonrpc.php$is_args$args;
-    }
-
     location / {
         try_files $uri /index.php?_url=$uri&$args;
     }
@@ -75,6 +73,33 @@ server {
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
         internal;
+    }
+
+    location ~ \.php$ {
+        return 404;
+    }
+
+    access_log /var/log/nginx/api-example.access.log;
+    error_log /var/log/nginx/api-example.error.log;
+}
+```
+
+内部RPC服务：
+
+```nginx
+server {
+    listen        2929;
+    server_name   jsonrpc-example.local;
+    root /var/www/api-example/rpc;
+    index jsonrpc.php;
+    
+    location ~ ^/(jsonrpc)\.php(/|$) {
+        fastcgi_pass  127.0.0.1:9000;
+        # fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        fastcgi_split_path_info       ^(.+\.php)(/.+)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
     }
 
     location ~ \.php$ {
