@@ -31,7 +31,7 @@ class JsonRpcServerHandler implements Evaluator
         try {
             $result = call_user_func_array(array($service, $method), $arguments);
             if (true === $this->biz['debug']) {
-                $this->getLogger()->info('RPC call.', ['rpcMethod' => $method, 'rpcArguments' => $arguments]);
+                $this->getLogger()->info('RPC call.', ['rpcMethod' => "{$service}.{$method}", 'rpcArguments' => $arguments]);
             }
         } catch (\Throwable $e) {
             $data = [
