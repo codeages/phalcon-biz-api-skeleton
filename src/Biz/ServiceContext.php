@@ -87,4 +87,9 @@ class ServiceContext
     {
         $this->traceId = $traceId;
     }
+
+    public function toArray()
+    {
+        return get_object_vars($this);
+    }
 }
