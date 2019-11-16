@@ -39,6 +39,6 @@ try {
 } catch (\Codeages\Biz\Framework\Service\Exception\ServiceException $e) {
     echo "Rpc Exception: \n";
     echo "  Code: {$e->getCode()}\n";
-    echo "  Messge: {$e->getMessage()}\n";
+    echo "  Message: {$e->getMessage()}\n";
 }
 
