@@ -17,21 +17,21 @@ class JsonRpcServerHandler implements Evaluator
         $this->biz = $biz;
     }
 
-    public function evaluate($method, $arguments)
+    public function evaluate($fullMethod, $arguments)
     {
         try {
             $this->auth();
             $this->initServiceContext();
-            list($service, $method) = $this->validateMethod($method);
+            list($service, $method) = $this->validateMethod($fullMethod);
         } catch (\Exception $e) {
-            $this->getLogger()->notice($e->getMessage(), ['rpcMethod' => $method, 'rpcArguments' => $arguments]);
+            $this->getLogger()->notice($e->getMessage(), ['rpcMethod' => $fullMethod, 'rpcArguments' => $arguments]);
             throw $e;
         }
 
         try {
             $result = call_user_func_array(array($service, $method), $arguments);
             if (true === $this->biz['debug']) {
-                $this->getLogger()->info('RPC call.', ['rpcMethod' => "{$service}.{$method}", 'rpcArguments' => $arguments]);
+                $this->getLogger()->info('RPC call.', ['rpcMethod' => $fullMethod, 'rpcArguments' => $arguments]);
             }
         } catch (\Throwable $e) {
             $data = [
