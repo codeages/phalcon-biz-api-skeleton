@@ -19,7 +19,7 @@
 
 **从脚手架创建项目**
 ```
-composer create-project codeages/phalcon-biz-api-skeleton api-example
+composer create-project codeages/phalcon-biz-api-skeleton example
 ```
 
 ## 开发
@@ -42,7 +42,7 @@ chmod 777 var/{cache,tmp,run,log}
 **创建数据库：**
 
 ```shell
-CREATE DATABASE `api_example`;
+CREATE DATABASE `example`;
 ```
 
 **执行数据库变更脚本：**
@@ -57,8 +57,8 @@ bin/phpmig migrate
 ```nginx
 server {
     listen        80;
-    server_name   api-example.local;
-    root /var/www/api-example/public;
+    server_name   example.local;
+    root /var/www/example/public;
     
     location / {
         try_files $uri /index.php?_url=$uri&$args;
@@ -78,8 +78,8 @@ server {
         return 404;
     }
 
-    access_log /var/log/nginx/api-example.access.log;
-    error_log /var/log/nginx/api-example.error.log;
+    access_log /var/log/nginx/example.access.log;
+    error_log /var/log/nginx/example.error.log;
 }
 ```
 
@@ -88,8 +88,8 @@ server {
 ```nginx
 server {
     listen        8008;
-    server_name   jsonrpc-example.local;
-    root /var/www/api-example/rpc;
+    server_name   example-rpc.local;
+    root /var/www/example/rpc;
     index jsonrpc.php;
     
     location ~ \.php$ {
@@ -101,8 +101,8 @@ server {
         fastcgi_param DOCUMENT_ROOT $realpath_root;
     }
 
-    access_log /var/log/nginx/jsonrpc-example.access.log;
-    error_log /var/log/nginx/jsonrpc-example.error.log;
+    access_log /var/log/nginx/example-rpc.access.log;
+    error_log /var/log/nginx/example-rpc.error.log;
 }
 ```
 
