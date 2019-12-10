@@ -6,6 +6,7 @@ use Datto\JsonRpc\Evaluator;
 use Datto\JsonRpc\Exceptions\MethodException;
 use Datto\JsonRpc\Responses\ErrorResponse;
 use App\Biz\ServiceContext;
+use Psr\Log\LoggerInterface;
 
 class JsonRpcServerHandler implements Evaluator
 {
@@ -16,15 +17,22 @@ class JsonRpcServerHandler implements Evaluator
         $this->biz = $biz;
     }
 
-    public function evaluate($method, $arguments)
+    public function evaluate($fullMethod, $arguments)
     {
-        $this->auth();
-        $this->initServiceContext();
-
-        list($service, $method) = $this->validateMethod($method);
+        try {
+            $this->auth();
+            $this->initServiceContext();
+            list($service, $method) = $this->validateMethod($fullMethod);
+        } catch (\Exception $e) {
+            $this->getLogger()->notice($e->getMessage(), ['rpcMethod' => $fullMethod, 'rpcArguments' => $arguments]);
+            throw $e;
+        }
 
         try {
             $result = call_user_func_array(array($service, $method), $arguments);
+            if (true === $this->biz['debug']) {
+                $this->getLogger()->info('RPC call.', ['rpcMethod' => $fullMethod, 'rpcArguments' => $arguments]);
+            }
         } catch (\Throwable $e) {
             $data = [
                 'type' => get_class($e),
@@ -32,6 +40,14 @@ class JsonRpcServerHandler implements Evaluator
                 'message' => $e->getMessage(),
                 'trace' => $e->getTrace(),
             ];
+
+            $this->getLogger()->notice($e->getMessage(), [
+                'rpcMethod' => $method,
+                'rpcArguments' => $arguments,
+                'rpcContext' => $this->biz['service_context']->toArray(),
+                'exception' => $data
+            ]);
+
             throw new \Datto\JsonRpc\Exceptions\ApplicationException($e->getMessage(), $e->getCode(), $data);
         }
 
@@ -79,7 +95,7 @@ class JsonRpcServerHandler implements Evaluator
             $context->setUserId(isset($parsed['user_id']) ? $parsed['user_id'] : null);
             $context->setUsername(isset($parsed['username']) ? $parsed['username'] : null);
             $context->setIp(isset($parsed['ip']) ? $parsed['ip'] : null);
-            $context->setTraceId(isset($parsed['ip']) ? $parsed['ip'] : null);
+            $context->setTraceId(isset($parsed['trace_id']) ? $parsed['trace_id'] : null);
         }
 
         $this->biz['service_context'] = $context;
@@ -104,6 +120,14 @@ class JsonRpcServerHandler implements Evaluator
         }
 
         return [$service, $method];
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    private function getLogger()
+    {
+        return $this->biz['logger'];
     }
 }
 

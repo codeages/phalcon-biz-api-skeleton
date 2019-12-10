@@ -28,9 +28,17 @@ class ArticleService extends \App\Biz\Service\BaseJsonRpcService
 
 $service = new ArticleService($biz);
 
-$article = $service->create([
-    'title' => 'test title',
-    'content' => 'test content',
-]);
+try {
+    $article = $service->create([
+        'title' => 'test title',
+        'content' => 'test content',
+    ]);
+    echo "Rpc result: \n";
+    print_r($article);
 
-var_dump($article);
+} catch (\Codeages\Biz\Framework\Service\Exception\ServiceException $e) {
+    echo "Rpc Exception: \n";
+    echo "  Code: {$e->getCode()}\n";
+    echo "  Message: {$e->getMessage()}\n";
+}
+
